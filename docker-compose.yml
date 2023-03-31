@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  postgress:
+    image: postgres
+
+  tracker.webapi:
+    image: ${DOCKER_REGISTRY-}trackerwebapi
+    build:
+      context: .
+      dockerfile: src/WebApi/Tracker.WebApi/Dockerfile
+
+volumes:
+  postgres:
+    driver: local
