@@ -1,3 +1,4 @@
+using Mapster;
 using Mediator;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Core.Entities;
@@ -19,8 +20,13 @@ public class CreateProjectHandler : ICommandHandler<CreateProjectCommand, Guid>
 
   public async ValueTask<Guid> Handle(CreateProjectCommand command, CancellationToken cancellationToken)
   {
-    var newProject = _context.Projects.Add(new Project(command.project.Name, command.project.CreatedAt, command.project.FinishedAt));
+    var project = command.project.Adapt<Project>();
+    var newProject = _context.Projects.Add(project);
+
     await _context.SaveChangesAsync(cancellationToken);
+
+    if (newProject is null)
+      return Guid.Empty;
 
     return newProject.Entity.Id;
   }

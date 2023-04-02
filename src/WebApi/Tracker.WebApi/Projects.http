@@ -1,0 +1,32 @@
+@url = http://localhost:5000/api/Project
+@accessToken = test
+@pageNumber=1
+@pageSize=10
+
+###
+GET {{url}}
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+# string Name, DateOnly CreatedAt, DateOnly FinishedAt
+###
+POST {{url}}
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "createdAt": "2021-01-01",
+  "finishedAt": "2023-01-01"
+}
+
+# Authorization: Bearer {{accessToken}}
+
+###
+# GET {{url}}/vacancies/skills?PageNumber={{{pageNumber}}}&PageSize={{pageSize}}&Skills=AspNet&Skills=English
+# Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+# ###
+# GET {{url}}/vacancies/salary?PageNumber={{{pageNumber}}}&PageSize={{pageSize}}&Salary=1000
+# Content-Type: application/json
+# Authorization: Bearer {{accessToken}}

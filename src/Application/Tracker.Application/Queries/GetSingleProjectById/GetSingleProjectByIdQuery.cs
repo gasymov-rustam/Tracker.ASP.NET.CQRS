@@ -1,3 +1,4 @@
+using Mapster;
 using Mediator;
 using Tracker.Application.Common.Interfaces;
 
@@ -20,6 +21,6 @@ public class GetSingleProjectByIdHandler : IQueryHandler<GetSingleProjectByIdQue
     if (project is null)
       throw new Exception($"Project with this id - {query.Id} does not exist");
 
-    return new GetSingleProjectDto(project.Id, project.Name, project.CreatedAt, project.FinishedAt);
+    return query.Adapt<GetSingleProjectDto>();
   }
 }

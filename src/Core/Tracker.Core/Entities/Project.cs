@@ -3,36 +3,37 @@
 namespace Tracker.Core.Entities;
 public sealed class Project : BaseEntity
 {
-  public DateOnly CreatedAt { get; private set; }
-  public DateOnly FinishedAt { get; private set; }
-  public Guid EmployeeId { get; set; }
-  public Employee Employee { get; set; }
-  public Project(string name, DateOnly date, DateOnly startDate) : base(name)
-  {
-    CreatedAt = startDate;
-    FinishedAt = date;
-  }
+    public DateOnly CreatedAt { get; private set; }
+    public DateOnly FinishedAt { get; private set; }
+    public Guid EmployeeId { get; set; }
+    public Employee Employee { get; set; }
+    public Project(string name) : base(name) { }
+    public Project(string name, DateOnly date, DateOnly startDate) : base(name)
+    {
+        CreatedAt = startDate;
+        FinishedAt = date;
+    }
 
-  public static Project UpdateFinishDate(Project project, DateOnly date)
-  {
-    project.FinishedAt = date;
+    public static Project UpdateFinishDate(Project project, DateOnly date)
+    {
+        project.FinishedAt = date;
 
-    return project;
-  }
+        return project;
+    }
 
-  public static Project UpdateName(Project project, string name)
-  {
-    project.Name = name;
+    public static Project UpdateName(Project project, string name)
+    {
+        project.Name = name;
 
-    return project;
-  }
+        return project;
+    }
 
-  public static Project UpdateProject(Project project, string name, DateOnly date, DateOnly startDate)
-  {
-    project.Name = name;
-    project.FinishedAt = date;
-    project.CreatedAt = startDate;
+    public static Project UpdateProject(Project project, string name, DateOnly date, DateOnly startDate)
+    {
+        project.Name = name;
+        project.FinishedAt = date;
+        project.CreatedAt = startDate;
 
-    return project;
-  }
+        return project;
+    }
 }
