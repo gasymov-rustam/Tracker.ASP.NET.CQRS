@@ -1,47 +1,45 @@
-using System.Globalization;
 using Mediator;
+using System.Globalization;
 using Tracker.Application.Common.Interfaces;
 
 namespace Tracker.Application.Queries.GetTimeTrackingByWeek;
 
-public record GetTimeTrackingByWeekDto(Guid EmployeeId, int NumberOfWeek);
-
-public record GetTimeTrackingByWeekQuery(GetTimeTrackingByWeekDto data) : IQuery<string>;
+public record GetTimeTrackingByWeekQuery(Guid EmployeeId, int NumberOfWeek) : IQuery<string>;
 
 public class GetTimeTrackingByWeekHandler : IQueryHandler<GetTimeTrackingByWeekQuery, string>
 {
-  private readonly ITrackerDBContext _context;
+    private readonly ITrackerDBContext _context;
 
-  public GetTimeTrackingByWeekHandler(ITrackerDBContext context) => _context = context;
+    public GetTimeTrackingByWeekHandler(ITrackerDBContext context) => _context = context;
 
-  public ValueTask<string> Handle(GetTimeTrackingByWeekQuery query, CancellationToken cancellationToken)
-  {
-    var projects = _context.Projects.Where(x => x.EmployeeId == query.data.EmployeeId).ToList();
-    CultureInfo cul = CultureInfo.CurrentCulture;
-
-    if (projects is null)
-      throw new Exception($"Employee with this id - {query.data.EmployeeId} does not exist");
-
-    foreach (var item in projects)
+    public ValueTask<string> Handle(GetTimeTrackingByWeekQuery query, CancellationToken cancellationToken)
     {
-      var d = new DateTime(item.CreatedAt.Year, item.CreatedAt.Month, item.CreatedAt.Day);
+        var projects = _context.Projects.Where(x => x.EmployeeId == query.EmployeeId).ToList();
+        CultureInfo cul = CultureInfo.CurrentCulture;
 
-      var firstDayWeek = cul.Calendar.GetWeekOfYear(
-        d,
-        CalendarWeekRule.FirstDay,
-        DayOfWeek.Monday);
+        if (projects is null)
+            throw new Exception($"Employee with this id - {query.EmployeeId} does not exist");
 
-      int weekNum = cul.Calendar.GetWeekOfYear(
-      d,
-      CalendarWeekRule.FirstDay,
-      DayOfWeek.Monday);
+        foreach (var item in projects)
+        {
+            var d = new DateTime(item.CreatedAt.Year, item.CreatedAt.Month, item.CreatedAt.Day);
 
-      if (weekNum == query.data.NumberOfWeek)
-      {
-        return ValueTask.FromResult($"Employee {item.Employee.Name} is working on project {item.Name} since {item.CreatedAt}");
-      }
+            var firstDayWeek = cul.Calendar.GetWeekOfYear(
+              d,
+              CalendarWeekRule.FirstDay,
+              DayOfWeek.Monday);
+
+            int weekNum = cul.Calendar.GetWeekOfYear(
+            d,
+            CalendarWeekRule.FirstDay,
+            DayOfWeek.Monday);
+
+            if (weekNum == query.NumberOfWeek)
+            {
+                return ValueTask.FromResult($"Employee {item.Employee.Name} is working on project {item.Name} since {item.CreatedAt}");
+            }
+        }
+
+        return ValueTask.FromResult("No projects found");
     }
-
-    return ValueTask.FromResult("No projects found");
-  }
 }

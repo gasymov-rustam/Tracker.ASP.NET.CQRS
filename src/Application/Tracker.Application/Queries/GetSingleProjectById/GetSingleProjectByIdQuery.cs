@@ -1,4 +1,3 @@
-using Mapster;
 using Mediator;
 using Tracker.Application.Common.Interfaces;
 
@@ -10,17 +9,17 @@ public record GetSingleProjectByIdQuery(Guid Id) : IQuery<GetSingleProjectDto>;
 
 public class GetSingleProjectByIdHandler : IQueryHandler<GetSingleProjectByIdQuery, GetSingleProjectDto>
 {
-  private readonly ITrackerDBContext _context;
+    private readonly ITrackerDBContext _context;
 
-  public GetSingleProjectByIdHandler(ITrackerDBContext context) => _context = context;
+    public GetSingleProjectByIdHandler(ITrackerDBContext context) => _context = context;
 
-  public async ValueTask<GetSingleProjectDto> Handle(GetSingleProjectByIdQuery query, CancellationToken cancellationToken)
-  {
-    var project = await _context.Projects.FindAsync(query.Id, cancellationToken);
+    public async ValueTask<GetSingleProjectDto> Handle(GetSingleProjectByIdQuery query, CancellationToken cancellationToken)
+    {
+        var project = await _context.Projects.FindAsync(query.Id, cancellationToken);
 
-    if (project is null)
-      throw new Exception($"Project with this id - {query.Id} does not exist");
+        if (project is null)
+            throw new Exception($"Project with this id - {query.Id} does not exist");
 
-    return query.Adapt<GetSingleProjectDto>();
-  }
+        return new GetSingleProjectDto(project.Id, project.Name, project.CreatedAt, project.FinishedAt);
+    }
 }

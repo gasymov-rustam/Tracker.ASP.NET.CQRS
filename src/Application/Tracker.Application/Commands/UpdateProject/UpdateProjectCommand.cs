@@ -6,27 +6,27 @@ namespace Tracker.Application.Commands.UpdateProject;
 
 public record UpdateProjectDto(string Name, DateOnly CreatedAt, DateOnly FinishedAt);
 
-public record UpdateProjectCommand(Guid Id, UpdateProjectDto project) : ICommand<Guid>;
+public record UpdateProjectCommand(Guid Id, string Name, DateOnly CreatedAt, DateOnly FinishedAt) : ICommand<Guid>;
 
 public class UpdateProjectHandler : ICommandHandler<UpdateProjectCommand, Guid>
 {
-  private readonly ITrackerDBContext _context;
+    private readonly ITrackerDBContext _context;
 
-  public UpdateProjectHandler(ITrackerDBContext context) => _context = context;
+    public UpdateProjectHandler(ITrackerDBContext context) => _context = context;
 
-  public async ValueTask<Guid> Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
-  {
-    var project = await _context.Projects.FindAsync(command.Id, cancellationToken);
+    public async ValueTask<Guid> Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
+    {
+        var project = await _context.Projects.FindAsync(command.Id, cancellationToken);
 
-    if (project is null)
-      throw new Exception($"Project with this id - {command.Id} does not exist");
+        if (project is null)
+            throw new Exception($"Project with this id - {command.Id} does not exist");
 
-    var updatedProject = Project.UpdateProject(project, command.project.Name, command.project.CreatedAt, command.project.FinishedAt);
+        var updatedProject = Project.UpdateProject(project, command.Name, command.CreatedAt, command.FinishedAt);
 
-    _context.Projects.Update(updatedProject);
+        _context.Projects.Update(updatedProject);
 
-    await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-    return updatedProject.Id;
-  }
+        return updatedProject.Id;
+    }
 }

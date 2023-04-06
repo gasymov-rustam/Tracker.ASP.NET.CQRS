@@ -8,10 +8,11 @@ public sealed class Project : BaseEntity
     public Guid EmployeeId { get; set; }
     public Employee Employee { get; set; }
     public Project(string name) : base(name) { }
-    public Project(string name, DateOnly date, DateOnly startDate) : base(name)
+
+    public Project(string name, DateOnly finishedAt, DateOnly startDate) : base(name)
     {
         CreatedAt = startDate;
-        FinishedAt = date;
+        FinishedAt = finishedAt;
     }
 
     public static Project UpdateFinishDate(Project project, DateOnly date)
