@@ -15,7 +15,7 @@ namespace Tracker.WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     // can be removed VaryByQueryKeys
-    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[] { "latest" })]
+    // [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[] { "latest" })]
     public class ProjectController : Controller
     {
         private readonly IMediator _mediator;

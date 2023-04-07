@@ -36,7 +36,13 @@ public class GetTimeTrackingByWeekHandler : IQueryHandler<GetTimeTrackingByWeekQ
 
             if (weekNum == query.NumberOfWeek)
             {
-                return ValueTask.FromResult($"Employee {item.Employee.Name} is working on project {item.Name} since {item.CreatedAt}");
+                var employee = _context.Employees.FirstOrDefault(x => x.Id == query.EmployeeId);
+
+                if (employee is null)
+                    return ValueTask.FromResult($"Employee with this id - {query.EmployeeId} does not exist");
+
+
+                return ValueTask.FromResult($"Employee {employee.Name} is working on project {item.Name} since {item.CreatedAt}");
             }
         }
 

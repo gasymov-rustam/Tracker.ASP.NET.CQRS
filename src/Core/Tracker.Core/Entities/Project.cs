@@ -9,10 +9,11 @@ public sealed class Project : BaseEntity
     public Employee Employee { get; set; }
     public Project(string name) : base(name) { }
 
-    public Project(string name, DateOnly finishedAt, DateOnly startDate) : base(name)
+    public Project(string name, DateOnly finishedAt, DateOnly startDate, Guid employeeId) : base(name)
     {
         CreatedAt = startDate;
         FinishedAt = finishedAt;
+        EmployeeId = employeeId;
     }
 
     public static Project UpdateFinishDate(Project project, DateOnly date)
@@ -36,5 +37,10 @@ public sealed class Project : BaseEntity
         project.CreatedAt = startDate;
 
         return project;
+    }
+
+    public override string ToString()
+    {
+        return $"Project: {Name} - {CreatedAt} - {FinishedAt}";
     }
 }

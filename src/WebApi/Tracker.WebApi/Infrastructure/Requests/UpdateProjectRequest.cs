@@ -1,3 +1,3 @@
 ﻿namespace Tracker.WebApi.Infrastructure.Requests;
 
-public record UpdateProjectRequest(string Name, DateOnly CreatedAt, DateOnly FinishedAt)
+public record UpdateProjectRequest(string Id, string Name, DateOnly CreatedAt, DateOnly FinishedAt);
