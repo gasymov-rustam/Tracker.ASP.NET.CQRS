@@ -9,8 +9,8 @@ var connectionString = builder.Configuration.GetConnectionString("postgresConnec
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddApplication();
-builder.Services.AddDataBaseContext(connectionString ?? "");
 builder.Services.AddScoped<ITrackerDBContext, TrackerDbContext>();
+builder.Services.AddDataBaseContext(connectionString ?? "");
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,8 +21,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
