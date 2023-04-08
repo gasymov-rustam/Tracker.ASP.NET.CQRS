@@ -7,21 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2C1F77B6-5CA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E884B359-1AB2-4384-B9F6-891002A1DD29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracker.Core", "src\Core\Tracker.Core\Tracker.Core.csproj", "{16B2F7A4-7793-42CB-BC5C-3AE880591EF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracker.Core", "src\Core\Tracker.Core\Tracker.Core.csproj", "{16B2F7A4-7793-42CB-BC5C-3AE880591EF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{3A94B401-9F81-4997-B355-664AA819346D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracker.Infrastructure", "src\Infrastructure\Tracker.Infrastructure\Tracker.Infrastructure.csproj", "{4838D1E2-D50E-45BB-8CB1-3033E639FBF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracker.Infrastructure", "src\Infrastructure\Tracker.Infrastructure\Tracker.Infrastructure.csproj", "{4838D1E2-D50E-45BB-8CB1-3033E639FBF0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{4F0574AB-DC1F-479A-86F4-D0388EC1DD03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracker.Application", "src\Application\Tracker.Application\Tracker.Application.csproj", "{D2F0453A-E072-4910-A7CA-9CAB4DBA11B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracker.Application", "src\Application\Tracker.Application\Tracker.Application.csproj", "{D2F0453A-E072-4910-A7CA-9CAB4DBA11B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{5E82719C-9844-4304-BCA3-A7F9E3A2C052}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracker.WebApi", "src\WebApi\Tracker.WebApi\Tracker.WebApi.csproj", "{7CC470F6-9661-4F04-AB1F-BB2DC803B031}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7FBE9706-46A9-4E47-98D5-2AC5B0FA7603}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tracker.WebApi", "src\WebApi\Tracker.WebApi\Tracker.WebApi.csproj", "{7CC470F6-9661-4F04-AB1F-BB2DC803B031}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +43,6 @@ Global
 		{7CC470F6-9661-4F04-AB1F-BB2DC803B031}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CC470F6-9661-4F04-AB1F-BB2DC803B031}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CC470F6-9661-4F04-AB1F-BB2DC803B031}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FBE9706-46A9-4E47-98D5-2AC5B0FA7603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FBE9706-46A9-4E47-98D5-2AC5B0FA7603}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7FBE9706-46A9-4E47-98D5-2AC5B0FA7603}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FBE9706-46A9-4E47-98D5-2AC5B0FA7603}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

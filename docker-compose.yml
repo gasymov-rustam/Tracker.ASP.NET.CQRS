@@ -1,59 +1,14 @@
-# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
-
-version: '3.9'
-
-networks:
-  trackerwebapi-dev:
-    driver: bridge
-
+version: '3.4'
 
 services:
-  trackerwebapi:
-    image: trackerwebapi
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+  postgres:
+    image: postgres
+
+  tracker.webapi:
+    image: ${DOCKER_REGISTRY-}trackerwebapi
     build:
       context: .
       dockerfile: src/WebApi/Tracker.WebApi/Dockerfile
-    ports:
-      - 5000:5000
-    depends_on:
-      - postgres_db
-      - pgadmin
-    networks:
-      - trackerwebapi-dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-  postgres_db:
-    container_name: postgres
-    image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=tracker_db
-    ports:
-      - 5432:5432
-    networks:
-      - trackerwebapi-dev
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4:latest
-    restart: always
-    ports:
-      - "5050:80"
-    networks:
-      - trackerwebapi-dev
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@i.ua
-      PGADMIN_DEFAULT_PASSWORD: 123
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin  
 
 volumes:
-  postgres_data:
-  pgadmin-data:
+  postgres:

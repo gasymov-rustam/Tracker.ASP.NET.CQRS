@@ -2,6 +2,7 @@ using Tracker.Application;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Infrastructure;
 using Tracker.Infrastructure.Dal;
+using Tracker.Infrastructure.Dal.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddScoped<ITrackerDBContext, TrackerDbContext>();
 builder.Services.AddDataBaseContext(connectionString ?? "");
+builder.Services.AddInitializer<RoleInitiallizer>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
