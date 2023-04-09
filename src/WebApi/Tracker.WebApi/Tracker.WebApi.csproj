@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Tracker.Application\Tracker.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Tracker.Infrastructure\Tracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\Tracker.Shared\Tracker.Shared.csproj" />
   </ItemGroup>
 
 </Project>
