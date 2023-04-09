@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Tracker.Shared.Cors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Tracker.Shared.Exceptions;
 
 namespace Tracker.Shared;
 public static class Extension
@@ -23,6 +20,7 @@ public static class Extension
     public static WebApplicationBuilder AddShared(this WebApplicationBuilder app)
     {
         app.Services.AddCorsPolicy(app.Configuration);
+        app.Services.AddErrorHandling();
 
         return app;
     }
@@ -30,6 +28,7 @@ public static class Extension
     public static WebApplication UseShared(this WebApplication app)
     {
         app.UseCorsPolicy();
+        app.UseErrorHandling();
 
         return app;
     }
