@@ -14,6 +14,9 @@ public static class Extension
 
         services.AddHostedService<DatabaseInitializer<TrackerDbContext>>();
         services.AddHostedService<DataInitializer>();
+        services.AddInitializer<RoleInitiallizer>();
+        services.AddInitializer<EmployeeInitiallizer>();
+        // services.AddTransient<IDataInitializer, RoleInitiallizer>();
 
         return services;
     }

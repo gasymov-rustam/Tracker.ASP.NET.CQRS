@@ -10,9 +10,10 @@ public sealed class Employee : BaseEntity
     public IReadOnlyCollection<Project> Projects => _projects;
     public Guid RoleId { get; set; }
     public Role Role { get; set; }
-    public Employee(string name, string sex, DateOnly birthday) : base(name)
+    public Employee(string name, string sex, DateOnly birthday, Guid roleId) : base(name)
     {
         Sex = sex;
         Birthday = birthday;
+        RoleId = roleId;
     }
 }

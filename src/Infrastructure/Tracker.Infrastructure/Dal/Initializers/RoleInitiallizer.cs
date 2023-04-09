@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Tracker.Core.Entities;
 
 namespace Tracker.Infrastructure.Dal.Initializers;
 
@@ -26,7 +27,7 @@ public class RoleInitiallizer : IDataInitializer
 
     private async Task AddRolesAsync()
     {
-        await _dbContext.Roles.AddAsync(new Core.Entities.Role("employee"));
+        await _dbContext.Roles.AddAsync(new Role("employee"));
 
         _logger.LogInformation("Initialized roles");
     }
