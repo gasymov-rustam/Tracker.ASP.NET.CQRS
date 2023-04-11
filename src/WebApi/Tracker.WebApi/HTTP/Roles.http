@@ -1,0 +1,78 @@
+@url = http://localhost:5000/api/Roles
+@id = 54b8da54-b19a-494f-b4b9-aeb5eb4c87a6
+# @pageNumber=1
+# @pageSize=10
+
+###
+# GET {{url}}/all
+GET {{url}}
+Content-Type: application/json
+
+###
+# GET {{url}}/id - get single by id
+GET {{url}}/{{id}}
+Content-Type: application/json
+
+# string Name,  - create Role
+###
+POST {{url}}
+Content-Type: application/json
+{
+  "Test"
+}
+
+# string Name, string Id - update Role
+###
+PUT {{url}}
+Content-Type: application/json
+{
+    "name": "Test",
+    "id": "54b8da54-b19a-494f-b4b9-aeb5eb4c87a6",
+}
+
+# id - delete Role
+###
+DELETE  {{url}}/{{id}}
+Content-Type: application/json
+
+
+# # string Name, DateOnly CreatedAt, DateOnly FinishedAt
+# ###
+# PUT {{url}}
+# Content-Type: application/json
+
+# {
+#   "id": "9ad46bce-7767-4325-bf13-0547722c4004",
+#   "createdAt": "2021-01-01",
+#   "finishedAt": "2023-01-01",
+#   "name": "Test30"
+# }
+
+# # string Name, DateOnly CreatedAt, DateOnly FinishedAt
+# ###
+# # DELETE {{url}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+# DELETE {{url}}/9ad46bce-7767-4325-bf13-0547722c4004
+# Content-Type: application/json
+
+# # string ןג
+# ###
+# # DELETE {{url}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+# GET {{url}}/5cc28a32-548b-4d5b-89f8-8321022f2e2f
+# Content-Type: application/json
+
+# # Guid EmployeeId, Guid ProjectId, DateOnly Start
+# ###
+# GET {{url}}/ByTime?EmployeeId=d5a8ac92-6f7a-407e-a3b5-2089bf9a4dff&ProjectId=5cc28a32-548b-4d5b-89f8-8321022f2e2f&year=0&month=0&day=0&dayOfWeek=0
+# Content-Type: application/json
+
+# # Authorization: Bearer {{accessToken}}
+
+# ###
+# # GET {{url}}/vacancies/skills?PageNumber={{{pageNumber}}}&PageSize={{pageSize}}&Skills=AspNet&Skills=English
+# # Content-Type: application/json
+# # Authorization: Bearer {{accessToken}}
+
+# # ###
+# # GET {{url}}/vacancies/salary?PageNumber={{{pageNumber}}}&PageSize={{pageSize}}&Salary=1000
+# # Content-Type: application/json
+# # Authorization: Bearer {{accessToken}}

@@ -9,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args).AddShared();
 var connectionString = builder.Configuration.GetConnectionString("postgresConnection");
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddResponseCaching(x =>
+{
+    x.MaximumBodySize = 1024;
+    x.UseCaseSensitivePaths = true;
+});
 builder.Services.AddApplication();
 builder.Services.AddScoped<ITrackerDBContext, TrackerDbContext>();
 builder.Services.AddDataBaseContext(connectionString ?? "");
@@ -28,9 +33,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
 //add cashing
 app.UseResponseCaching();
 app.UseShared();
+app.MapControllers();
 
 app.Run();
