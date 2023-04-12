@@ -1,34 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Mapster;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Tracker.Application.Commands.RoleCommands.CreateRoleCommand;
 using Tracker.Application.Commands.RoleCommands.DeleteRoleCommand;
 using Tracker.Application.Commands.RoleCommands.UpdateRoleCommand;
 using Tracker.Application.Queries.RoleQueries.GetAllRoles;
 using Tracker.Application.Queries.RoleQueries.GetRoleById;
+using Tracker.Shared.BaseApiController;
 using Tracker.WebApi.Infrastructure.Requests;
 
 namespace Tracker.WebApi.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[] { "latest" })]
-    public class RolesController : Controller
+    public class RolesController : BaseApiController<RolesController>
     {
-        private readonly ILogger<RolesController> _logger;
-        private readonly IMediator _mediator;
-
-        public RolesController(IMediator mediator, ILogger<RolesController> logger)
-        {
-            _mediator = mediator;
-            _logger = logger;
-        }
+        public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator, logger) { }
 
         [HttpGet]
         public async ValueTask<IActionResult> GetAllRolesAsync()

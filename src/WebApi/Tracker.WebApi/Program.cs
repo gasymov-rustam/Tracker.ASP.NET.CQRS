@@ -20,6 +20,7 @@ builder.Services.AddScoped<ITrackerDBContext, TrackerDbContext>();
 builder.Services.AddDataBaseContext(connectionString ?? "");
 
 builder.Services.AddEndpointsApiExplorer();
+// convert DateOnly to string
 builder.Services.AddSwaggerGen(c => c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" }));
 
 var app = builder.Build();
