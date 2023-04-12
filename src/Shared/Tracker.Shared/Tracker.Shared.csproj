@@ -12,8 +12,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
-    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1"/>
+    <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Tracker.Application\Tracker.Application.csproj" />
   </ItemGroup>
 
 </Project>

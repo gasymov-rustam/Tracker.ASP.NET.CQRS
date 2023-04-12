@@ -13,5 +13,8 @@
         "prod": {
             "url": "http://localhost:5000/api"
         },
-    }
+    },
+    "cSpell.words": [
+        "Behaviour"
+    ]
 }

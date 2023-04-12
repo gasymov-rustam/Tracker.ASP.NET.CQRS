@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Tracker.Application.Common.Pipeline;
 using Tracker.Shared.Exceptions.Mappers;
 
 namespace Tracker.Shared.Middleware;
@@ -32,6 +33,13 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
 
     private async Task HandleErrorAsync(HttpContext context, Exception exception)
     {
+        if (exception is ValidationException exc)
+        {
+            await context.Response.WriteAsJsonAsync(exc.ValidationError);
+
+            return;
+        }
+
         var errorResponse = _exceptionMapper.Map(exception);
 
         context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);

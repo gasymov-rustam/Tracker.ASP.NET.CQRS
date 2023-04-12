@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Concurrent;
 using System.Net;
 using Humanizer;
@@ -20,12 +21,19 @@ internal sealed class ExceptionMapper : IExceptionMapper
     private readonly ConcurrentDictionary<Type, string> _codes = new();
 
     public ExceptionResponse Map(Exception exception)
-        => exception switch
+    {
+        if (exception is ValidationException exc)
+        {
+            Console.WriteLine(exc.Message);
+        }
+        return exception switch
         {
             BaseException => new ExceptionResponse(new Error(GetErrorCode(exception), exception.Message), HttpStatusCode.BadRequest),
             HttpRequestException => _communicationResponse,
+            ValidationException => new ExceptionResponse(new Error("validation_error", exception.Message), HttpStatusCode.BadRequest),
             _ => _defaultResponse
         };
+    }
 
     private string GetErrorCode(object exception)
     {

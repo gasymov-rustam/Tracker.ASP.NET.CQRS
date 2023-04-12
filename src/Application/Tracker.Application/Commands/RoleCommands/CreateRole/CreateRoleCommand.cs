@@ -1,11 +1,36 @@
+using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.Interfaces;
+using Tracker.Application.Common.Pipeline;
 using Tracker.Core.Entities;
 
 namespace Tracker.Application.Commands.RoleCommands.CreateRoleCommand;
 
-public record CreateRoleCommand(string Name) : ICommand<Guid>;
+public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
+{
+    public CreateRoleCommandValidator()
+    {
+        RuleFor(x => x.Name).Length(3, 15).NotEmpty().WithErrorCode("409").WithMessage("Name is required");
+    }
+}
+
+public record CreateRoleCommand(string Name) : ICommand<Guid>, IValidate
+{
+    public bool IsValid([NotNullWhen(false)] out ValidationError? error)
+    {
+        var validator = new CreateRoleCommandValidator();
+        var result = validator.Validate(this);
+
+        if (result.IsValid)
+            error = null;
+        else
+            error = new ValidationError(result.Errors.Select(e => e.ErrorMessage).ToArray());
+
+        return result.IsValid;
+    }
+};
 
 public class CreateRoleHandler : ICommandHandler<CreateRoleCommand, Guid>
 {

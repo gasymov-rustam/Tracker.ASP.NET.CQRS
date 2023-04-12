@@ -1,5 +1,5 @@
 namespace Tracker.Shared.Exceptions;
-public sealed class BaseException : Exception
+public class BaseException : Exception
 {
     public string Code { get; set; } = string.Empty;
 
