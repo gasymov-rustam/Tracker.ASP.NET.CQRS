@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using Tracker.Application;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Infrastructure;
@@ -19,7 +20,7 @@ builder.Services.AddScoped<ITrackerDBContext, TrackerDbContext>();
 builder.Services.AddDataBaseContext(connectionString ?? "");
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" }));
 
 var app = builder.Build();
 

@@ -24,7 +24,8 @@
     {
       "name": ".NET Core Attach",
       "type": "coreclr",
-      "request": "attach"
+      "request": "attach",
+      "processName":"Tracker.WebApi.exe"
     },
     {
       "name": "Docker .NET Launch",

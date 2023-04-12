@@ -1,21 +1,21 @@
-@url = http://localhost:5000/api/Roles
+# @url = http://localhost:5000/api/Roles
 @id = 54b8da54-b19a-494f-b4b9-aeb5eb4c87a6
 # @pageNumber=1
 # @pageSize=10
 
 ###
 # GET {{url}}/all
-GET {{url}}
+GET {{url}}/{{roles}}
 Content-Type: application/json
 
 ###
 # GET {{url}}/id - get single by id
-GET {{url}}/{{id}}
+GET {{url}}/{{roles}}/{{id}}
 Content-Type: application/json
 
 # string Name,  - create Role
 ###
-POST {{url}}
+POST {{url}}/{{roles}}
 Content-Type: application/json
 {
   "Test"
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 # string Name, string Id - update Role
 ###
-PUT {{url}}
+PUT {{url}}/{{roles}}
 Content-Type: application/json
 {
     "name": "Test",
@@ -32,13 +32,13 @@ Content-Type: application/json
 
 # id - delete Role
 ###
-DELETE  {{url}}/{{id}}
+DELETE  {{url}}/{{roles}}/{{id}}
 Content-Type: application/json
 
 
 # # string Name, DateOnly CreatedAt, DateOnly FinishedAt
 # ###
-# PUT {{url}}
+# PUT {{url}}/{{roles}}
 # Content-Type: application/json
 
 # {
@@ -50,19 +50,19 @@ Content-Type: application/json
 
 # # string Name, DateOnly CreatedAt, DateOnly FinishedAt
 # ###
-# # DELETE {{url}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
-# DELETE {{url}}/9ad46bce-7767-4325-bf13-0547722c4004
+# # DELETE {{url}}/{{roles}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+# DELETE {{url}}/{{roles}}/9ad46bce-7767-4325-bf13-0547722c4004
 # Content-Type: application/json
 
 # # string ןג
 # ###
-# # DELETE {{url}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
-# GET {{url}}/5cc28a32-548b-4d5b-89f8-8321022f2e2f
+# # DELETE {{url}}/{{roles}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+# GET {{url}}/{{roles}}/5cc28a32-548b-4d5b-89f8-8321022f2e2f
 # Content-Type: application/json
 
 # # Guid EmployeeId, Guid ProjectId, DateOnly Start
 # ###
-# GET {{url}}/ByTime?EmployeeId=d5a8ac92-6f7a-407e-a3b5-2089bf9a4dff&ProjectId=5cc28a32-548b-4d5b-89f8-8321022f2e2f&year=0&month=0&day=0&dayOfWeek=0
+# GET {{url}}/{{roles}}/ByTime?EmployeeId=d5a8ac92-6f7a-407e-a3b5-2089bf9a4dff&ProjectId=5cc28a32-548b-4d5b-89f8-8321022f2e2f&year=0&month=0&day=0&dayOfWeek=0
 # Content-Type: application/json
 
 # # Authorization: Bearer {{accessToken}}

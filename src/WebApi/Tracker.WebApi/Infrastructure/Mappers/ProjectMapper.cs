@@ -1,5 +1,7 @@
 using Mapster;
 using Tracker.Application.Commands.CreateProject;
+using Tracker.Application.Commands.EmployeeCommands.CreateEmployeeCommand;
+using Tracker.Application.Commands.EmployeeCommands.UpdateEmployeeCommand;
 using Tracker.Application.Commands.RoleCommands.UpdateRoleCommand;
 using Tracker.Application.Commands.UpdateProject;
 using Tracker.WebApi.Infrastructure.Requests;
@@ -17,6 +19,12 @@ public class ProjectMapper : IRegister
             .RequireDestinationMemberSource(true);
 
         config.NewConfig<UpdateRoleRequest, UpdateRoleCommand>()
+            .RequireDestinationMemberSource(true);
+
+        config.NewConfig<CreateEmployeeRequest, CreateEmployeeCommand>()
+            .RequireDestinationMemberSource(true);
+
+        config.NewConfig<UpdateEmployeeRequest, UpdateEmployeeCommand>()
             .RequireDestinationMemberSource(true);
     }
 }

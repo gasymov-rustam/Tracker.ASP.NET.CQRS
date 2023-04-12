@@ -1,0 +1,54 @@
+@id = 54b8da54-b19a-494f-b4b9-aeb5eb4c87a6
+
+###
+# Get all employees
+GET {{url}}/{{employye}}
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+###
+
+# Get all employees
+GET {{url}}/{{employye}}/{{id}}
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+# string Name, DateOnly CreatedAt, DateOnly FinishedAt
+###
+POST {{url}}/{{employye}}
+Content-Type: application/json
+
+{
+  "createdAt": "2021-01-01",
+  "employeeId": "e1a88f13-54f4-40bd-a622-cf5f329fe4ba",
+  "finishedAt": "2023-01-01",
+  "name": "Test"
+}
+
+# string Name, DateOnly CreatedAt, DateOnly FinishedAt
+###
+PUT {{url}}/{{employye}}
+Content-Type: application/json
+
+{
+  "id": "9ad46bce-7767-4325-bf13-0547722c4004",
+  "createdAt": "2021-01-01",
+  "finishedAt": "2023-01-01",
+  "name": "Test30"
+}
+
+# string Name, DateOnly CreatedAt, DateOnly FinishedAt
+###
+# DELETE {{url}}/{{employye}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+DELETE {{url}}/{{employye}}/9ad46bce-7767-4325-bf13-0547722c4004
+Content-Type: application/json
+
+# string ןג
+###
+# DELETE {{url}}/{{employye}}/?Id=b5a09aa5-2176-4e3d-963b-5105f34f3ec3
+GET {{url}}/{{employye}}/5cc28a32-548b-4d5b-89f8-8321022f2e2f
+Content-Type: application/json
+
+# Guid EmployeeId, Guid employyeId, DateOnly Start
+###
+GET {{url}}/{{employye}}/ByTime?EmployeeId=d5a8ac92-6f7a-407e-a3b5-2089bf9a4dff&employyeId=5cc28a32-548b-4d5b-89f8-8321022f2e2f&year=0&month=0&day=0&dayOfWeek=0
+Content-Type: application/json

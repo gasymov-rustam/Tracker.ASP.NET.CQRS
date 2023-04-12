@@ -16,4 +16,16 @@ public sealed class Employee : BaseEntity
         Birthday = birthday;
         RoleId = roleId;
     }
+
+    public static Employee UpdateEmployeeName(Employee employee, string Name)
+    {
+        employee.Name = Name;
+
+        return employee;
+    }
+
+    public override string ToString()
+    {
+        return $"Project: {Name} - {Sex} - {Role.Id} - {Role.Name} - {RoleId}";
+    }
 }
