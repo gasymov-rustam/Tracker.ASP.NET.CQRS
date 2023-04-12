@@ -9,82 +9,81 @@ using Tracker.Application.Queries.RoleQueries.GetRoleById;
 using Tracker.Shared.BaseApiController;
 using Tracker.WebApi.Infrastructure.Requests;
 
-namespace Tracker.WebApi.Controllers
+namespace Tracker.WebApi.Controllers;
+
+public class RolesController : BaseApiController<RolesController>
 {
-    public class RolesController : BaseApiController<RolesController>
+    public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator, logger) { }
+
+    [HttpGet]
+    public async ValueTask<IActionResult> GetAllRolesAsync()
     {
-        public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator, logger) { }
+        var result = await _mediator.Send(new GetAllRolesQuery());
 
-        [HttpGet]
-        public async ValueTask<IActionResult> GetAllRolesAsync()
+        if (result is null)
         {
-            var result = await _mediator.Send(new GetAllRolesQuery());
-
-            if (result is null)
-            {
-                _logger.LogInformation("No roles found");
-                return NoContent();
-            }
-
-            return Ok(result);
+            _logger.LogInformation("No roles found");
+            return NoContent();
         }
 
-        [HttpGet("{id}")]
-        public async ValueTask<IActionResult> GetRoleByIdAsync(Guid id)
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async ValueTask<IActionResult> GetRoleByIdAsync(Guid id)
+    {
+        var result = await _mediator.Send(new GetRoleByIdQuery(id));
+
+        if (result == Guid.Empty)
         {
-            var result = await _mediator.Send(new GetRoleByIdQuery(id));
-
-            if (result == Guid.Empty)
-            {
-                _logger.LogInformation("No roles found");
-                return NoContent();
-            }
-
-            return Ok(result);
+            _logger.LogInformation("No roles found");
+            return NoContent();
         }
 
-        [HttpPost]
-        public async ValueTask<IActionResult> CreateRoleAsync([FromBody] string name)
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async ValueTask<IActionResult> CreateRoleAsync([FromBody] string name)
+    {
+        Guid result = await _mediator.Send(new CreateRoleCommand(name));
+
+        if (result == Guid.Empty)
         {
-            Guid result = await _mediator.Send(new CreateRoleCommand(name));
-
-            if (result == Guid.Empty)
-            {
-                _logger.LogError("Role does not created");
-                return BadRequest();
-            }
-
-            return Ok(result);
+            _logger.LogError("Role does not created");
+            return BadRequest();
         }
 
-        [HttpPut]
-        public async ValueTask<IActionResult> UpdateRoleAsync([FromBody] UpdateRoleRequest data)
+        return Ok(result);
+    }
+
+    [HttpPut]
+    public async ValueTask<IActionResult> UpdateRoleAsync([FromBody] UpdateRoleRequest request)
+    {
+        var command = request.Adapt<UpdateRoleCommand>();
+
+        Guid result = await _mediator.Send(command);
+
+        if (result == Guid.Empty)
         {
-            var command = data.Adapt<UpdateRoleCommand>();
-
-            Guid result = await _mediator.Send(command);
-
-            if (result == Guid.Empty)
-            {
-                _logger.LogError("Role does not created");
-                return BadRequest();
-            }
-
-            return Ok(result);
+            _logger.LogError("Role does not created");
+            return BadRequest();
         }
 
-        [HttpDelete("{id}")]
-        public async ValueTask<IActionResult> DeleteRoleAsync(Guid id)
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async ValueTask<IActionResult> DeleteRoleAsync(Guid id)
+    {
+        Guid result = await _mediator.Send(new DeleteRoleCommand(id));
+
+        if (result == Guid.Empty)
         {
-            Guid result = await _mediator.Send(new DeleteRoleCommand(id));
-
-            if (result == Guid.Empty)
-            {
-                _logger.LogError("Role does not exist");
-                return BadRequest();
-            }
-
-            return Ok(result);
+            _logger.LogError("Role does not exist");
+            return BadRequest();
         }
+
+        return Ok(result);
     }
 }

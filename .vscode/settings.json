@@ -1,16 +1,17 @@
 {
     "rest-client.environmentVariables": {
 
+
         "$shared": {
             "project": "Project",
             "roles": "Roles",
             "employye": "Employee",
         },
         "dev": {
-            "url": "http://localhost:5000/api/"
+            "url": "http://localhost:5000/api"
         },
         "prod": {
-            "url": "http://localhost:5000/api/"
+            "url": "http://localhost:5000/api"
         },
     }
 }

@@ -1,5 +1,5 @@
 # @url = http://localhost:5000/api/Roles
-@id = 54b8da54-b19a-494f-b4b9-aeb5eb4c87a6
+@id = b8343564-1613-4c3e-a2de-2f1ea6fff223
 # @pageNumber=1
 # @pageSize=10
 
@@ -13,21 +13,21 @@ Content-Type: application/json
 GET {{url}}/{{roles}}/{{id}}
 Content-Type: application/json
 
-# string Name,  - create Role
+# string name
 ###
 POST {{url}}/{{roles}}
 Content-Type: application/json
-{
-  "Test"
-}
 
-# string Name, string Id - update Role
+"Admin"
+
+# string name, string id
 ###
 PUT {{url}}/{{roles}}
 Content-Type: application/json
+
 {
-    "name": "Test",
-    "id": "54b8da54-b19a-494f-b4b9-aeb5eb4c87a6",
+    "name": "User",
+    "id": "{{id}}"
 }
 
 # id - delete Role
