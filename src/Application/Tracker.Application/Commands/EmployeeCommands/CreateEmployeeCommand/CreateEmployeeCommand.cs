@@ -1,3 +1,4 @@
+using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseCommandHandler;
@@ -5,6 +6,15 @@ using Tracker.Application.Common.Interfaces;
 using Tracker.Core.Entities;
 
 namespace Tracker.Application.Commands.EmployeeCommands.CreateEmployeeCommand;
+
+public class CreateRoleCommandValidator : AbstractValidator<CreateEmployeeCommand>
+{
+    public CreateRoleCommandValidator()
+    {
+        RuleFor(x => x.Name).Length(3, 15).NotEmpty().WithErrorCode("409").WithMessage("Employee Name is required");
+        RuleFor(x => x.Sex).NotEmpty().WithMessage("Please choose");
+    }
+}
 
 public record CreateEmployeeCommand(string Name, string Sex, DateOnly Birthday, Guid RoleId) : ICommand<Guid>;
 
