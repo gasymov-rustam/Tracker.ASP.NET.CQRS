@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+
+  tracker.webapi:
+    image: ${DOCKER_REGISTRY-}trackerwebapi
+    build:
+      context: .
+      dockerfile: src/WebApi/Tracker.WebApi/Dockerfile
