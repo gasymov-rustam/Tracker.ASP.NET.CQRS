@@ -1,7 +1,7 @@
 using Mapster;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Tracker.Application.Commands.RoleCommands.CreateRoleCommand;
+using Tracker.Application.Commands.RoleCommands.CreateRole;
 using Tracker.Application.Commands.RoleCommands.DeleteRoleCommand;
 using Tracker.Application.Commands.RoleCommands.UpdateRoleCommand;
 using Tracker.Application.Queries.RoleQueries.GetAllRoles;

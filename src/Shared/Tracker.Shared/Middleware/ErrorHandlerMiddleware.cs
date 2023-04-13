@@ -35,6 +35,7 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
     {
         if (exception is ValidationException exc)
         {
+            context.Response.StatusCode = HttpStatusCode.Conflict.GetHashCode();
             await context.Response.WriteAsJsonAsync(exc.ValidationError);
 
             return;
