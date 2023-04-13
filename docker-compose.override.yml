@@ -10,6 +10,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "Configuration:DefaultConnection=Host=localhost;Database=tracker_dev;Username=postgres;Password="
     ports:
       - "5000:80"
       #- "5001:443"

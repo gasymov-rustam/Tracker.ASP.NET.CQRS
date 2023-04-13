@@ -7,7 +7,7 @@ using Tracker.Shared;
 
 var builder = WebApplication.CreateBuilder(args).AddShared();
 
-var connectionString = builder.Configuration.GetConnectionString("postgresConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddResponseCaching(x =>
