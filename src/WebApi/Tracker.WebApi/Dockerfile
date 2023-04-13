@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["src/WebApi/Tracker.WebApi/Tracker.WebApi.csproj", "src/WebApi/Tracker.WebApi/"]
 COPY ["src/Application/Tracker.Application/Tracker.Application.csproj", "src/Application/Tracker.Application/"]
 COPY ["src/Core/Tracker.Core/Tracker.Core.csproj", "src/Core/Tracker.Core/"]
+COPY ["src/Shared/Tracker.Shared/Tracker.Shared.csproj", "src/Shared/Tracker.Shared/"]
 COPY ["src/Infrastructure/Tracker.Infrastructure/Tracker.Infrastructure.csproj", "src/Infrastructure/Tracker.Infrastructure/"]
 RUN dotnet restore "src/WebApi/Tracker.WebApi/Tracker.WebApi.csproj"
 COPY . .
