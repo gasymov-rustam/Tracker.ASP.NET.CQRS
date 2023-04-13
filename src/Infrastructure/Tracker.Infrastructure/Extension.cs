@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Tracker.Application.Common.Interfaces;
 using Tracker.Infrastructure.Dal;
 using Tracker.Infrastructure.Dal.Initializers;
 
@@ -9,14 +10,17 @@ public static class Extension
 {
     public static IServiceCollection AddDataBaseContext(this IServiceCollection services, string connectionString)
     {
+        services.AddScoped<ITrackerDBContext, TrackerDbContext>();
+
         services.AddDbContext<TrackerDbContext>(options =>
-            options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Tracker.WebApi")));
+                                options.UseNpgsql(connectionString,
+                                b => b.MigrationsAssembly("Tracker.WebApi")));
 
         services.AddHostedService<DatabaseInitializer<TrackerDbContext>>();
         services.AddHostedService<DataInitializer>();
         services.AddInitializer<RoleInitiallizer>();
         services.AddInitializer<EmployeeInitiallizer>();
-        // services.AddTransient<IDataInitializer, RoleInitiallizer>();
+        services.AddTransient<IDataInitializer, RoleInitiallizer>();
 
         return services;
     }

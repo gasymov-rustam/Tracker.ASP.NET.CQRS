@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.4'
 
 networks:
   trackerwebapi-dev:
@@ -10,12 +10,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - "Configuration:DefaultConnection=Host=localhost;Database=tracker_dev;Username=postgres;Password="
     ports:
       - "5000:80"
-      #- "5001:443"
+      # - "5001:443"
     depends_on:
       - postgres
+      #- sqlserver
       #- pgadmin
     networks:
       - trackerwebapi-dev
@@ -24,17 +24,36 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   postgres:
-    shm_size: '4gb'
-    container_name: postgres
-    restart: unless-stopped
-    networks:
-      - trackerwebapi-dev
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    ports:
-      - "127.0.0.1:5432:5432"
-    volumes: 
-      - postgres:/var/lib/postgresql/data
+      shm_size: '4gb'
+      container_name: postgres
+      restart: unless-stopped
+      networks:
+        - trackerwebapi-dev
+      environment:
+        - POSTGRES_HOST_AUTH_METHOD=trust
+      ports:
+        - "127.0.0.1:5432:5432"
+      volumes: 
+        - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
+#   # db:
+    driver: local
+
+  #sqlserver:
+  #  container_name: sqlserver
+  #  environment:
+  #    - MYSQL_DATABASE=quotes
+  #    - MYSQL_ROOT_PASSWORD=123
+  #  ports:
+  #    - '1433:1433'
+  #  volumes:
+  #    - db:/var/lib/mysql
+  #  networks:
+  #    - trackerwebapi-dev
+
+
   
   # pgadmin:
   #   container_name: pgadmin
@@ -48,7 +67,3 @@ services:
   #     PGADMIN_DEFAULT_PASSWORD: 123
   #   volumes:
   #    - pgadmin-data:/var/lib/pgadmin  
-
-volumes:
-  postgres:
-    driver: local
