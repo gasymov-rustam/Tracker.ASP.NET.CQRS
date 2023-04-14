@@ -30,7 +30,7 @@ public static class Extension
     public static WebApplication UseShared(this WebApplication app)
     {
         app.UseCorsPolicy();
-        app.UseResponseCaching();
+        // app.UseResponseCaching();
         app.UseErrorHandling();
 
         return app;

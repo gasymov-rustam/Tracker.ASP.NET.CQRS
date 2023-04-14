@@ -2,6 +2,7 @@ using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseCommandHandler;
+using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Core.Entities;
 
@@ -20,7 +21,7 @@ public record CreateEmployeeCommand(string Name, string Sex, DateOnly Birthday, 
 
 public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, Guid, ITrackerDBContext>
 {
-    public CreateEmployeeHandler(ITrackerDBContext context, ILogger<CreateEmployeeCommand> logger) : base(context, logger) { }
+    public CreateEmployeeHandler(ITrackerDBContext context, ILogger<CreateEmployeeCommand> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 
     public async override ValueTask<Guid> Handle(CreateEmployeeCommand command, CancellationToken cancellationToken)
     {
@@ -35,6 +36,8 @@ public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, G
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.SetAsync(newEmployee.Entity.Id.ToString(), newEmployee.Entity, cancellationToken);
 
         return newEmployee.Entity.Id;
     }

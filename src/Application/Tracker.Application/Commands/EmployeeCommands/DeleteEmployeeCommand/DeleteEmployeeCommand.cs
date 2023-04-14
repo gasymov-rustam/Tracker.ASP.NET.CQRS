@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseCommandHandler;
+using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Core.Entities;
 
@@ -11,7 +12,7 @@ public record DeleteEmployeeCommand(Guid Id) : ICommand<Guid>;
 
 public class DeleteEmployeeHandler : BaseCommandHandler<DeleteEmployeeCommand, Guid, ITrackerDBContext>
 {
-    public DeleteEmployeeHandler(ITrackerDBContext context, ILogger<DeleteEmployeeCommand> logger) : base(context, logger) { }
+    public DeleteEmployeeHandler(ITrackerDBContext context, ILogger<DeleteEmployeeCommand> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 
     public async override ValueTask<Guid> Handle(DeleteEmployeeCommand command, CancellationToken cancellationToken)
     {
@@ -32,6 +33,8 @@ public class DeleteEmployeeHandler : BaseCommandHandler<DeleteEmployeeCommand, G
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.RemoveAsync(deletedEmployee.Entity.Id.ToString(), cancellationToken);
 
         return deletedEmployee.Entity.Id;
     }

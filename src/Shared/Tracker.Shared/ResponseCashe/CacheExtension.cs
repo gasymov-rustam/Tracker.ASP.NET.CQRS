@@ -14,13 +14,14 @@ internal static class CacheExtension
         if (cacheOptions is null)
             return services;
 
-        services.AddControllers(options =>
-        {
-            foreach (var cacheProfile in cacheOptions)
-            {
-                options.CacheProfiles.Add(cacheProfile.Key, cacheProfile.Get<CacheProfile>());
-            }
-        });
+        services.AddControllers();
+        // services.AddControllers(options =>
+        // {
+        //     foreach (var cacheProfile in cacheOptions)
+        //     {
+        //         options.CacheProfiles.Add(cacheProfile.Key, cacheProfile.Get<CacheProfile>());
+        //     }
+        // });
 
         return services;
     }

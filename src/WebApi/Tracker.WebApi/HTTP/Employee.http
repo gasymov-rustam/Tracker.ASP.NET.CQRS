@@ -1,4 +1,4 @@
-@id = d6e9c7db-95a9-4ffd-bce5-2946bcff0fbc
+@id = 03bef90d-2994-446b-8617-3cd5d369a488
 
 ###
 # Get all employees
@@ -18,10 +18,10 @@ POST {{url}}/{{employye}}
 Content-Type: application/json
 
 {
-  "name": "Test",
+  "name": "Test2",
   "sex": "man",
   "birthday": "2023-01-01",
-  "roleId": "a13154b7-1954-4c36-a6cb-365364410a86"
+  "roleId": "261775be-7696-436c-8d99-8a5d5c0a8c16"
 }
 
 # string Name, DateOnly CreatedAt, DateOnly FinishedAt
