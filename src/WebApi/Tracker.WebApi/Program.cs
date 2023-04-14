@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.OpenApi.Models;
 using Tracker.Application;
 using Tracker.Infrastructure;
@@ -28,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
