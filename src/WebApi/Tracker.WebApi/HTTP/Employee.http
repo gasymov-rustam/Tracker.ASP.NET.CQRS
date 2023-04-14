@@ -18,7 +18,7 @@ POST {{url}}/{{employye}}
 Content-Type: application/json
 
 {
-  "name": "Test2",
+  "name": "Test5",
   "sex": "man",
   "birthday": "2023-01-01",
   "roleId": "261775be-7696-436c-8d99-8a5d5c0a8c16"
@@ -30,7 +30,7 @@ PUT {{url}}/{{employye}}
 Content-Type: application/json
 
 {
-  "id": "d6e9c7db-95a9-4ffd-bce5-2946bcff0fbc",
+  "id": "81b99689-4772-43f2-9afb-71183a5084e2",
   "name": "Test30"
 }
 

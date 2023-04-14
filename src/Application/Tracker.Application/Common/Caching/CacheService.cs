@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using Tracker.Core.Primitive;
 
 namespace Tracker.Application.Common.Caching;
 
@@ -53,7 +54,7 @@ public class CacheService : ICacheService
         await Task.WhenAll(tasks);
     }
 
-    public async Task<List<T>> GetAllAsync<T>(CancellationToken cancellationToken = default) where T : class
+    public async Task<List<T>> GetAllAsync<T>(Func<Task<List<T>>> factory, CancellationToken cancellationToken = default) where T : class, IBaseEntity
     {
         List<T> values = new();
 
@@ -64,6 +65,14 @@ public class CacheService : ICacheService
             if (value is not null)
                 values.Add(value);
         }
+
+        if (values.Count != 0)
+            return values;
+
+        values = await factory();
+
+        foreach (T value in values)
+            await SetAsync(value.Id.ToString(), value, cancellationToken);
 
         return values;
     }

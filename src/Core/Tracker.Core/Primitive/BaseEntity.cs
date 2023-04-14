@@ -1,8 +1,8 @@
 ﻿namespace Tracker.Core.Primitive;
 
-public abstract class BaseEntity
+public abstract class BaseEntity : IBaseEntity
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; }
     public string Name { get; protected set; } = string.Empty;
     public BaseEntity(string name)
     {
