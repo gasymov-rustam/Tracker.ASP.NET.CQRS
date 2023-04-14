@@ -2,6 +2,16 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "docker-compose: up",
+      "type": "shell",
+      "command": "docker-compose -f docker-compose.debug.yml up -d",
+    },
+    {
+      "label": "docker-compose: down",
+      "type": "shell",
+      "command": "docker-compose -f docker-compose.debug.yml down",
+    },
+    {
       "label": "build",
       "command": "dotnet",
       "type": "process",

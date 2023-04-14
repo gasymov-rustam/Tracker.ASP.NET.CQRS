@@ -1,17 +1,6 @@
 {
   "version": "0.2.0",
   "configurations": [
-    
-
-  {
-    "name": "Docker .NET Attach (Preview)",
-    "type": "docker",
-    "request": "attach",
-    "platform": "netCore",
-    "sourceFileMap": {
-      "/src": "${workspaceFolder}"
-    }
-  },
     {
       "name": ".NET Core Launch (web)",
       "type": "coreclr",
@@ -46,6 +35,28 @@
       "netCore": {
         "appProject": "${workspaceFolder}/src/WebApi/Tracker.WebApi/Tracker.WebApi.csproj"
       }
-    }
+    },
+    {
+      "name": "Docker .NET Attach (Preview)",
+      "type": "docker",
+      "request": "attach",
+      "platform": "netCore",
+      "containerName": "trackerwebapi",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Docker .NET Launch (Compose)",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-compose: up",
+      "postDebugTask": "docker-compose: down",
+      "containerName": "trackerwebapi",
+      "netCore": {
+        "appProject": "${workspaceFolder}/src/WebApi/Tracker.WebApi/Tracker.WebApi.csproj",
+        "enableDebugging": true
+      }
+    },
   ]
 }
