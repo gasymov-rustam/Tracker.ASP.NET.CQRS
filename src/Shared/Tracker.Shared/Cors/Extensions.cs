@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tracker.Shared.Constants;
 
 namespace Tracker.Shared.Cors;
 
@@ -12,7 +9,7 @@ internal static class Extensions
 {
     internal static IServiceCollection AddCorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
-        var options = configuration.BindOptions<CorsOptions>("Cors");
+        var options = configuration.BindOptions<CorsOptions>(TrackerOptionsConsts.CORS_OPTIONS);
         services.AddSingleton(options);
 
         return services.AddCors(cors =>
@@ -21,7 +18,7 @@ internal static class Extensions
             var allowedMethods = options.AllowedMethods;
             var allowedOrigins = options.AllowedOrigins;
 
-            cors.AddPolicy("Cors", corsPolicy =>
+            cors.AddPolicy(TrackerOptionsConsts.CORS_OPTIONS, corsPolicy =>
             {
                 var hosts = allowedOrigins?.ToArray() ?? Array.Empty<String>();
 
@@ -39,5 +36,5 @@ internal static class Extensions
     }
 
     internal static IApplicationBuilder UseCorsPolicy(this IApplicationBuilder app)
-        => app.UseCors("Cors");
+        => app.UseCors(TrackerOptionsConsts.CORS_OPTIONS);
 }

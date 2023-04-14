@@ -11,7 +11,6 @@ using Tracker.WebApi.Infrastructure.Requests;
 
 namespace Tracker.WebApi.Controllers;
 
-[ResponseCache(Duration = 1, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new string[] { "latest" })]
 public class RolesController : BaseApiController<RolesController>
 {
     public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator, logger) { }

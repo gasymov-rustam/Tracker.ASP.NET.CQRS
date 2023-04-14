@@ -18,7 +18,7 @@ Content-Type: application/json
 POST {{url}}/{{roles}}
 Content-Type: application/json
 
-""
+"User"
 
 # string name, string id
 ###
