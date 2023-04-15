@@ -1,6 +1,9 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using StackExchange.Redis;
+using Tracker.Application.Constants;
 using Tracker.Core.Primitive;
 
 namespace Tracker.Application.Common.Caching;
@@ -10,7 +13,22 @@ public class CacheService : ICacheService
     private static readonly ConcurrentDictionary<string, bool> _cacheKeys = new();
     private readonly IDistributedCache _distributedCache;
 
-    public CacheService(IDistributedCache distributedCache) => _distributedCache = distributedCache;
+    public CacheService(IDistributedCache distributedCache, IConfiguration configuration)
+    {
+        _distributedCache = distributedCache;
+
+        if (_cacheKeys.IsEmpty)
+        {
+            var config = configuration.GetConnectionString(TrackerApplicationConsts.REDIS_CONNECTION_STRING) ?? "";
+
+            using ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
+
+            foreach (var key in redis.GetServer(config).Keys())
+            {
+                _cacheKeys.TryAdd(key, true);
+            }
+        }
+    }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
     {
@@ -28,7 +46,9 @@ public class CacheService : ICacheService
 
         value = await factory();
 
-        await SetAsync(key, value, cancellationToken);
+        var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + key;
+
+        await SetAsync(id, value, cancellationToken);
 
         return value;
     }
@@ -54,25 +74,32 @@ public class CacheService : ICacheService
         await Task.WhenAll(tasks);
     }
 
-    public async Task<List<T>> GetAllAsync<T>(Func<Task<List<T>>> factory, CancellationToken cancellationToken = default) where T : class, IBaseEntity
+    public async Task<List<T>> GetAllByPrefixAsync<T>(string preFix, Func<Task<List<T>>> factory, CancellationToken cancellationToken) where T : class, IBaseEntity
     {
         List<T> values = new();
 
-        foreach (string key in _cacheKeys.Keys)
+        if (!_cacheKeys.IsEmpty)
         {
-            var value = await GetAsync<T>(key, cancellationToken);
+            foreach (string key in _cacheKeys.Keys.Where(x => x.StartsWith(preFix)))
+            {
+                var value = await GetAsync<T>(key, cancellationToken);
 
-            if (value is not null)
-                values.Add(value);
+                if (value is not null)
+                    values.Add(value);
+            }
+
+            if (values.Count != 0)
+                return values;
         }
-
-        if (values.Count != 0)
-            return values;
 
         values = await factory();
 
         foreach (T value in values)
-            await SetAsync(value.Id.ToString(), value, cancellationToken);
+        {
+            var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + value.Id;
+
+            await SetAsync(id, value, cancellationToken);
+        }
 
         return values;
     }

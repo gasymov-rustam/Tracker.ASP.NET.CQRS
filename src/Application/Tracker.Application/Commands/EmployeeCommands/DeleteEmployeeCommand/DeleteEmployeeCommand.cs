@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseCommandHandler;
 using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
+using Tracker.Application.Constants;
 using Tracker.Core.Entities;
 
 namespace Tracker.Application.Commands.EmployeeCommands.DeleteEmployeeCommand;
@@ -34,7 +35,9 @@ public class DeleteEmployeeHandler : BaseCommandHandler<DeleteEmployeeCommand, G
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveAsync(deletedEmployee.Entity.Id.ToString(), cancellationToken);
+        var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + deletedEmployee.Entity.Id;
+
+        await _cacheService.RemoveAsync(id, cancellationToken);
 
         return deletedEmployee.Entity.Id;
     }

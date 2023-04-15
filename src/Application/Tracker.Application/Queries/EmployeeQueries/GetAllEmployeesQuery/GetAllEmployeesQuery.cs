@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseQueryHandler;
 using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
+using Tracker.Application.Constants;
 using Tracker.Core.Primitive;
 
 namespace Tracker.Application.Queries.EmployeeQueries.GetAllEmployeesQuery;
@@ -18,7 +19,7 @@ public class GetAllEmployeesHandler : BaseQueryHandler<GetAllEmployeesQuery, IEn
 
     public async override ValueTask<IEnumerable<GetEmployeeDto>> Handle(GetAllEmployeesQuery query, CancellationToken cancellationToken)
     {
-        var cachedEmployees = await _cacheService.GetAllAsync(async () =>
+        var cachedEmployees = await _cacheService.GetAllByPrefixAsync(TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX, async () =>
         {
             return await _context.Employees
                                        .AsTracking()
