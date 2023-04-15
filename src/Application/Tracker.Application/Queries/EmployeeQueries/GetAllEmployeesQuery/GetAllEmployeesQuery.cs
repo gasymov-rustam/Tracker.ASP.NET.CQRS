@@ -13,7 +13,7 @@ public record GetEmployeeDto(Guid Id, string Name, string Sex, DateOnly Birthday
 
 public record GetAllEmployeesQuery : IQuery<IEnumerable<GetEmployeeDto>>;
 
-public class GetAllEmployeesHandler : BaseQueryHandler<GetAllEmployeesQuery, IEnumerable<GetEmployeeDto>, ITrackerDBContext>
+public class GetAllEmployeesHandler : BaseQueryHandler<GetAllEmployeesQuery, IEnumerable<GetEmployeeDto>>
 {
     public GetAllEmployeesHandler(ITrackerDBContext context, ILogger<GetAllEmployeesQuery> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 

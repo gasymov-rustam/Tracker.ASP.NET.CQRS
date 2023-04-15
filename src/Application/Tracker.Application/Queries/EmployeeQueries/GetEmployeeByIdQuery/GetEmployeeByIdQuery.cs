@@ -10,9 +10,9 @@ using Tracker.Core.Entities;
 
 namespace Tracker.Application.Queries.EmployeeQueries.GetEmployeeByIdQuery;
 
-public record GetEmployeeByIdQuery(Guid Id) : IQuery<GetEmployeeDto>;
+public record GetEmployeeByIdQuery(Guid Id) : IQuery<GetEmployeeDto?>;
 
-public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, GetEmployeeDto, ITrackerDBContext>
+public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, GetEmployeeDto?>
 {
     public GetEmployeeByIdHandler(ITrackerDBContext context, ILogger<GetEmployeeByIdQuery> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 
@@ -22,10 +22,13 @@ public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, Get
 
         return await _cacheService.GetAsync(id, async () =>
         {
-            var employee = await _context.Employees
-                                        .Where(x => x.Id == query.Id)
-                                        .Select(x => new GetEmployeeDto(x.Id, x.Name, x.Sex, x.Birthday, x.Role.Name))
-                                        .FirstOrDefaultAsync(cancellationToken);
+            var employee = await _context.Employees.AsNoTracking()
+                                                    .Include(x => x.Role)
+                                                    .Select(x => new GetEmployeeDto(x.Id, x.Name, x.Sex, x.Birthday, x.Role.Name))
+                                                    .FirstOrDefaultAsync(x => x.Id == query.Id, cancellationToken);
+            // .Where(x => x.Id == query.Id)
+            // .Select(x => new GetEmployeeDto(x.Id, x.Name, x.Sex, x.Birthday, x.Role.Name))
+            // .FirstOrDefaultAsync(cancellationToken);
 
             if (employee is null)
             {

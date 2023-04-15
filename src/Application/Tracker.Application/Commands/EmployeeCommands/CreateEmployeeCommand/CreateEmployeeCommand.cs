@@ -20,7 +20,7 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateEmployeeComman
 
 public record CreateEmployeeCommand(string Name, string Sex, DateOnly Birthday, Guid RoleId) : ICommand<Guid>;
 
-public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, Guid, ITrackerDBContext>
+public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, Guid>
 {
     public CreateEmployeeHandler(ITrackerDBContext context, ILogger<CreateEmployeeCommand> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 

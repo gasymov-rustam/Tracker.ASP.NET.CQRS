@@ -3,7 +3,6 @@ using Mediator;
 
 namespace Tracker.Application.Common.Pipeline;
 
-
 public class MessageValidatorBehaviour<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse> where TMessage : class, ICommand<TResponse>
 {
     private readonly IEnumerable<IValidator<TMessage>>? _validators = null;

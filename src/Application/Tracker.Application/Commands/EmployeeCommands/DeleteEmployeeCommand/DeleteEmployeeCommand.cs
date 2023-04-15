@@ -11,7 +11,7 @@ namespace Tracker.Application.Commands.EmployeeCommands.DeleteEmployeeCommand;
 
 public record DeleteEmployeeCommand(Guid Id) : ICommand<Guid>;
 
-public class DeleteEmployeeHandler : BaseCommandHandler<DeleteEmployeeCommand, Guid, ITrackerDBContext>
+public class DeleteEmployeeHandler : BaseCommandHandler<DeleteEmployeeCommand, Guid>
 {
     public DeleteEmployeeHandler(ITrackerDBContext context, ILogger<DeleteEmployeeCommand> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 

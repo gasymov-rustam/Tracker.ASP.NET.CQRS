@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using Tracker.Application.Constants;
@@ -12,29 +13,46 @@ public class CacheService : ICacheService
 {
     private static readonly ConcurrentDictionary<string, bool> _cacheKeys = new();
     private readonly IDistributedCache _distributedCache;
+    private readonly ILogger<CacheService> _logger;
 
-    public CacheService(IDistributedCache distributedCache, IConfiguration configuration)
+    public CacheService(IDistributedCache distributedCache, IConfiguration configuration, ILogger<CacheService> logger)
     {
+        _logger = logger;
         _distributedCache = distributedCache;
 
         if (_cacheKeys.IsEmpty)
         {
             var config = configuration.GetConnectionString(TrackerApplicationConsts.REDIS_CONNECTION_STRING) ?? "";
 
-            using ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
-
-            foreach (var key in redis.GetServer(config).Keys())
+            try
             {
-                _cacheKeys.TryAdd(key, true);
+                using ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
+
+                foreach (var key in redis.GetServer(config).Keys())
+                {
+                    _cacheKeys.TryAdd(key, true);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "CacheService: CacheService: {Message}", e.Message);
             }
         }
     }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
     {
-        string? value = await _distributedCache.GetStringAsync(key, cancellationToken);
+        try
+        {
+            string? value = await _distributedCache.GetStringAsync(key, cancellationToken);
 
-        return value is null ? null : JsonConvert.DeserializeObject<T>(value);
+            return value is null ? null : JsonConvert.DeserializeObject<T>(value);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "CacheService: GetAsync: {Message}", e.Message);
+            return null;
+        }
     }
 
     public async Task<T?> GetAsync<T>(string key, Func<Task<T?>> factory, CancellationToken cancellationToken = default) where T : class
@@ -44,28 +62,57 @@ public class CacheService : ICacheService
         if (value is not null)
             return value;
 
-        value = await factory();
+        try
+        {
+            value = await factory();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "CacheService: GetAsync: {Message}", e.Message);
+            return null;
+        }
 
         if (value is null)
             return null;
 
         var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + key;
 
-        await SetAsync(id, value, cancellationToken);
+        try
+        {
+            await SetAsync(id, value, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "CacheService: GetAsync: {Message}", e.Message);
+        }
 
         return value;
     }
 
     public async Task SetAsync<T>(string key, T value, CancellationToken cancellationToken = default) where T : class
     {
-        await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(value), cancellationToken);
+        try
+        {
+            await _distributedCache.SetStringAsync(key, JsonConvert.SerializeObject(value), cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "CacheService: SetAsync: {Message}", e.Message);
+        }
 
         _cacheKeys.TryAdd(key, true);
     }
 
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
-        await _distributedCache.RemoveAsync(key, cancellationToken);
+        try
+        {
+            await _distributedCache.RemoveAsync(key, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "CacheService: RemoveAsync: {Message}", e.Message);
+        }
 
         _cacheKeys.TryRemove(key, out bool _);
     }
@@ -85,10 +132,17 @@ public class CacheService : ICacheService
         {
             foreach (string key in _cacheKeys.Keys.Where(x => x.StartsWith(preFix)))
             {
-                var value = await GetAsync<T>(key, cancellationToken);
+                try
+                {
+                    var value = await GetAsync<T>(key, cancellationToken);
 
-                if (value is not null)
-                    values.Add(value);
+                    if (value is not null)
+                        values.Add(value);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "CacheService: GetAllByPrefixAsync: {Message}", e.Message);
+                }
             }
 
             if (values.Count != 0)
@@ -101,7 +155,14 @@ public class CacheService : ICacheService
         {
             var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + value.Id;
 
-            await SetAsync(id, value, cancellationToken);
+            try
+            {
+                await SetAsync(id, value, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "CacheService: GetAllByPrefixAsync: {Message}", e.Message);
+            }
         }
 
         return values;

@@ -11,7 +11,7 @@ namespace Tracker.Application.Commands.EmployeeCommands.UpdateEmployeeCommand;
 
 public record UpdateEmployeeCommand(Guid Id, string Name) : ICommand<Guid>;
 
-public class UpdateEmployeeHandler : BaseCommandHandler<UpdateEmployeeCommand, Guid, ITrackerDBContext>
+public class UpdateEmployeeHandler : BaseCommandHandler<UpdateEmployeeCommand, Guid>
 {
     public UpdateEmployeeHandler(ITrackerDBContext context, ILogger<UpdateEmployeeCommand> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 

@@ -11,6 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=tracker_dev;Username=postgres;Password=
+      - ConnectionStrings__RedisConnection=redis:6379
     ports:
       - "5000:80"
       # - "5001:443"
@@ -37,9 +38,23 @@ services:
       volumes: 
         - postgres:/var/lib/postgresql/data
 
+  redis:
+    image: redis
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=trust
+    networks:
+      - trackerwebapi-dev
+    ports:
+      - "6379:6379"
+    volumes: 
+      - redis:/data
+
 volumes:
   postgres:
-#   # db:
+    driver: local
+  redis:
     driver: local
 
   #sqlserver:
