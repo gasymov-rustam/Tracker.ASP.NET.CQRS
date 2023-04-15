@@ -6,6 +6,9 @@ services:
   
   redis:
     image: redis
+
+  seq:
+    image: datalust/seq 
     
   tracker.webapi:
     image: ${DOCKER_REGISTRY-}trackerwebapi

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Tracker.Shared.Exceptions;
 using Tracker.Shared.ResponseCache;
+using Tracker.Shared.Observability.Logging;
 
 namespace Tracker.Shared;
 public static class Extension
@@ -20,9 +21,11 @@ public static class Extension
 
     public static WebApplicationBuilder AddShared(this WebApplicationBuilder app)
     {
+        app.AddLogging();
         app.Services.AddCorsPolicy(app.Configuration);
         app.Services.AddResponseCache(app.Configuration);
         app.Services.AddErrorHandling();
+        app.Services.AddLogger(app.Configuration);
 
         return app;
     }
