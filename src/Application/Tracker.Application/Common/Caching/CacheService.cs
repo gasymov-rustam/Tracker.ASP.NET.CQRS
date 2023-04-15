@@ -37,7 +37,7 @@ public class CacheService : ICacheService
         return value is null ? null : JsonConvert.DeserializeObject<T>(value);
     }
 
-    public async Task<T> GetAsync<T>(string key, Func<Task<T>> factory, CancellationToken cancellationToken = default) where T : class
+    public async Task<T?> GetAsync<T>(string key, Func<Task<T?>> factory, CancellationToken cancellationToken = default) where T : class
     {
         T? value = await GetAsync<T>(key, cancellationToken);
 
@@ -45,6 +45,9 @@ public class CacheService : ICacheService
             return value;
 
         value = await factory();
+
+        if (value is null)
+            return null;
 
         var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + key;
 

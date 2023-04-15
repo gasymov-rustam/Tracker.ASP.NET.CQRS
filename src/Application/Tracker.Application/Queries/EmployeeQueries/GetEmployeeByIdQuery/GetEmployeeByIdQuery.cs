@@ -16,7 +16,7 @@ public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, Get
 {
     public GetEmployeeByIdHandler(ITrackerDBContext context, ILogger<GetEmployeeByIdQuery> logger, ICacheService cacheService) : base(context, logger, cacheService) { }
 
-    public async override ValueTask<GetEmployeeDto> Handle(GetEmployeeByIdQuery query, CancellationToken cancellationToken)
+    public async override ValueTask<GetEmployeeDto?> Handle(GetEmployeeByIdQuery query, CancellationToken cancellationToken)
     {
         var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + query.Id;
 
@@ -30,7 +30,7 @@ public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, Get
             if (employee is null)
             {
                 _logger.LogError("GetEmployeeByIdHandler: employee with id {Id} does not exist", query.Id);
-                return new GetEmployeeDto(Guid.Empty, string.Empty, string.Empty, default, string.Empty);
+                return null;
             }
 
             _logger.LogDebug(employee.ToString());

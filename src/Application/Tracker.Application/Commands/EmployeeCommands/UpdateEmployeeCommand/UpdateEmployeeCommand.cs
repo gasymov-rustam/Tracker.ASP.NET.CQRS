@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Tracker.Application.Common.BaseCommandHandler;
 using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
+using Tracker.Application.Constants;
 using Tracker.Core.Entities;
 
 namespace Tracker.Application.Commands.EmployeeCommands.UpdateEmployeeCommand;
@@ -35,7 +36,9 @@ public class UpdateEmployeeHandler : BaseCommandHandler<UpdateEmployeeCommand, G
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.SetAsync(updatedEmployee.Entity.Id.ToString(), updatedEmployee.Entity, cancellationToken);
+        var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + updatedEmployee.Entity.Id;
+
+        await _cacheService.SetAsync(id, updatedEmployee.Entity, cancellationToken);
 
         return updatedEmployee.Entity.Id;
     }
