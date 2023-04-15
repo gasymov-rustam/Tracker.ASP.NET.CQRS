@@ -25,7 +25,7 @@ public class GetEmployeeByIdHandler : BaseQueryHandler<GetEmployeeByIdQuery, Get
             var employee = await _context.Employees
                                         .Where(x => x.Id == query.Id)
                                         .Select(x => new GetEmployeeDto(x.Id, x.Name, x.Sex, x.Birthday, x.Role.Name))
-                                        .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+                                        .FirstOrDefaultAsync(cancellationToken);
 
             if (employee is null)
             {
