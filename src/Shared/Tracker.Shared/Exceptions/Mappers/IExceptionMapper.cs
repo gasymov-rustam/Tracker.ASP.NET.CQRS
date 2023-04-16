@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using System.Collections.Concurrent;
 using System.Net;
 using Humanizer;
+using Tracker.Application.Common.Pipeline;
 
 namespace Tracker.Shared.Exceptions.Mappers;
 
@@ -22,15 +22,11 @@ internal sealed class ExceptionMapper : IExceptionMapper
 
     public ExceptionResponse Map(Exception exception)
     {
-        if (exception is ValidationException exc)
-        {
-            Console.WriteLine(exc.Message);
-        }
         return exception switch
         {
             BaseException => new ExceptionResponse(new Error(GetErrorCode(exception), exception.Message), HttpStatusCode.BadRequest),
             HttpRequestException => _communicationResponse,
-            ValidationException => new ExceptionResponse(new Error("validation_error", exception.Message), HttpStatusCode.BadRequest),
+            ValidationException validException => new ExceptionResponse(new ValidationError(validException?.ValidationError.ValidationErrors), HttpStatusCode.Conflict),
             _ => _defaultResponse
         };
     }
