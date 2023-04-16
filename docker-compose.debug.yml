@@ -30,6 +30,19 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: redis
+    ports:
+      - "8081:8081"
+    networks:
+      - trackerwebapi-dev
+    depends_on:
+      - redis
+
   postgres:
     image: postgres
     shm_size: '4gb'

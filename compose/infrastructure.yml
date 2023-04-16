@@ -19,12 +19,26 @@ services:
     image: redis
     container_name: redis
     restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
     networks:
       - tracker
     ports:
       - "6379:6379"
     volumes: 
       - redis:/data
+  
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      REDIS_HOSTS: redis
+    ports:
+      - "8081:8081"
+    networks:
+      - tracker
+    depends_on:
+      - redis
 
   seq:
     image: datalust/seq 
