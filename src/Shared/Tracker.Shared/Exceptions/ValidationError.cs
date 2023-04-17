@@ -1,4 +1,4 @@
-namespace Tracker.Application.Common.Pipeline;
+namespace Tracker.Shared.Exceptions;
 
 // public sealed record ValidationError(IDictionary<string> Errors);
 public sealed class ValidationError

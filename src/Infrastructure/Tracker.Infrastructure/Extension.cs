@@ -20,6 +20,7 @@ public static class Extension
         services.AddHostedService<DataInitializer>();
         services.AddInitializer<RoleInitiallizer>();
         services.AddInitializer<EmployeeInitiallizer>();
+        services.AddInitializer<UserInitiallizer>();
         services.AddTransient<IDataInitializer, RoleInitiallizer>();
 
         return services;

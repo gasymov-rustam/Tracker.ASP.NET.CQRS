@@ -29,11 +29,12 @@ public class EmployeeInitiallizer : IDataInitializer
     private async Task AddEmployeeAsync()
     {
         var role = await _dbContext.Roles.FirstOrDefaultAsync();
+        var user = await _dbContext.Users.FirstOrDefaultAsync();
 
-        if (role is null)
+        if (role is null || user is null)
             throw new Exception("RoleDb is empty");
 
-        await _dbContext.Employees.AddAsync(new Employee("Alex", "man", new DateOnly(2020, 01, 10), role.Id));
+        await _dbContext.Employees.AddAsync(new Employee("Alex", "man", new DateOnly(2020, 01, 10), role.Id, user.Id));
 
         _logger.LogInformation("Initialized employees");
     }

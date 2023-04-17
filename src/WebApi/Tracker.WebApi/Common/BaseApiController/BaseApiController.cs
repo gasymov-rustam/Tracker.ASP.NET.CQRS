@@ -1,9 +1,7 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Tracker.Shared.Constants;
 
-namespace Tracker.Shared.BaseApiController;
+namespace Tracker.WebApi.Common.BaseApiController;
 
 [ApiController]
 [Route("api/[controller]")]

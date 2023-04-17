@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Tracker.Shared.Exceptions;
 using Tracker.Shared.ResponseCache;
 using Tracker.Shared.Observability.Logging;
+using Tracker.Shared.Security;
 
 namespace Tracker.Shared;
 public static class Extension
@@ -22,10 +23,12 @@ public static class Extension
     public static WebApplicationBuilder AddShared(this WebApplicationBuilder app)
     {
         app.AddLogging();
+        app.Services.AddHttpContextAccessor();
         app.Services.AddCorsPolicy(app.Configuration);
         app.Services.AddResponseCache(app.Configuration);
         app.Services.AddErrorHandling();
         app.Services.AddLogger(app.Configuration);
+        app.Services.AddJwt(app.Configuration);
 
         return app;
     }
@@ -35,6 +38,8 @@ public static class Extension
         app.UseCorsPolicy();
         // app.UseResponseCaching();
         app.UseErrorHandling();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         return app;
     }

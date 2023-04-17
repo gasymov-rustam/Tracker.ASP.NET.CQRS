@@ -1,4 +1,4 @@
-namespace Tracker.Application.Common.Pipeline;
+namespace Tracker.Shared.Exceptions;
 public sealed class ValidationException : Exception
 {
     public ValidationException(ValidationError validationError) : base("Validation error") =>

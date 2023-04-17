@@ -1,5 +1,7 @@
 using FluentValidation;
 using Mediator;
+using Tracker.Shared.Exceptions;
+using ValidationException = Tracker.Shared.Exceptions.ValidationException;
 
 namespace Tracker.Application.Common.Pipeline;
 

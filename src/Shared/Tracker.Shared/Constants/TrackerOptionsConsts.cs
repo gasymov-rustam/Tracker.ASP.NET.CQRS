@@ -10,4 +10,5 @@ public static class TrackerOptionsConsts
     public const string FileOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] ({SourceContext}.{Method}) {Message}{NewLine}{Exception}";
     public const string AppSectionName = "app";
     public const string SerilogSectionName = "serilog";
+    public const string JwtOptionSectionName = "jwt";
 }

@@ -18,7 +18,7 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateEmployeeComman
     }
 }
 
-public record CreateEmployeeCommand(string Name, string Sex, DateOnly Birthday, Guid RoleId) : ICommand<Guid>;
+public record CreateEmployeeCommand(string Name, string Sex, DateOnly Birthday, Guid RoleId, Guid UserId) : ICommand<Guid>;
 
 public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, Guid>
 {
@@ -27,7 +27,7 @@ public class CreateEmployeeHandler : BaseCommandHandler<CreateEmployeeCommand, G
     public async override ValueTask<Guid> Handle(CreateEmployeeCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("CreateEmployeeCommand");
-        Employee employee = new(command.Name, command.Sex, command.Birthday, command.RoleId);
+        Employee employee = new(command.Name, command.Sex, command.Birthday, command.RoleId, command.UserId);
         var newEmployee = await _context.Employees.AddAsync(employee, cancellationToken);
 
         if (newEmployee.Entity is null)

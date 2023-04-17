@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Net;
 using Humanizer;
-using Tracker.Application.Common.Pipeline;
 
 namespace Tracker.Shared.Exceptions.Mappers;
 

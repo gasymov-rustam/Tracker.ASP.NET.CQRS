@@ -6,7 +6,7 @@ using Tracker.Application.Commands.EmployeeCommands.DeleteEmployeeCommand;
 using Tracker.Application.Commands.EmployeeCommands.UpdateEmployeeCommand;
 using Tracker.Application.Queries.EmployeeQueries.GetAllEmployeesQuery;
 using Tracker.Application.Queries.EmployeeQueries.GetEmployeeByIdQuery;
-using Tracker.Shared.BaseApiController;
+using Tracker.WebApi.Common.BaseApiController;
 using Tracker.WebApi.Infrastructure.Requests;
 
 namespace Tracker.WebApi.Controllers

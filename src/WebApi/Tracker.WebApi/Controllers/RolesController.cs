@@ -6,7 +6,7 @@ using Tracker.Application.Commands.RoleCommands.DeleteRoleCommand;
 using Tracker.Application.Commands.RoleCommands.UpdateRoleCommand;
 using Tracker.Application.Queries.RoleQueries.GetAllRoles;
 using Tracker.Application.Queries.RoleQueries.GetRoleById;
-using Tracker.Shared.BaseApiController;
+using Tracker.WebApi.Common.BaseApiController;
 using Tracker.WebApi.Infrastructure.Requests;
 
 namespace Tracker.WebApi.Controllers;
