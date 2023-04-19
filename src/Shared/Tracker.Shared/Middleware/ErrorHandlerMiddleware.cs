@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Tracker.Shared.Exceptions.Mappers;
 
-namespace Tracker.Shared.Middleware;
+namespace Tracker.Shared.Exceptions.Middleware;
+
 internal sealed class ErrorHandlerMiddleware : IMiddleware
 {
     private readonly IExceptionMapper _exceptionMapper;
@@ -11,9 +12,11 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
 
     public ErrorHandlerMiddleware(
         IExceptionMapper exceptionMapper,
-        ILogger<ErrorHandlerMiddleware> logger)
+        ILogger<ErrorHandlerMiddleware> logger
+    )
     {
-        _exceptionMapper = exceptionMapper ?? throw new ArgumentNullException(nameof(exceptionMapper));
+        _exceptionMapper =
+            exceptionMapper ?? throw new ArgumentNullException(nameof(exceptionMapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -34,11 +37,14 @@ internal sealed class ErrorHandlerMiddleware : IMiddleware
     {
         var errorResponse = _exceptionMapper.Map(exception);
 
-        context.Response.StatusCode = (int)(errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
+        context.Response.StatusCode = (int)(
+            errorResponse?.StatusCode ?? HttpStatusCode.InternalServerError
+        );
 
         var response = errorResponse?.Response;
 
-        if (response is null) return;
+        if (response is null)
+            return;
 
         await context.Response.WriteAsJsonAsync(response);
     }
