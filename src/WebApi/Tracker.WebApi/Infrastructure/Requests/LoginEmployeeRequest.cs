@@ -1,3 +1,3 @@
 namespace Tracker.WebApi.Infrastructure.Requests;
 
-// public record LoginEmployeeRequest()
+public record LoginEmployeeRequest(string Name, string Password);
