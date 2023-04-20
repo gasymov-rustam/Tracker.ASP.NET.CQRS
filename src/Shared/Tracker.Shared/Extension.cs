@@ -6,14 +6,17 @@ using Tracker.Shared.Exceptions;
 using Tracker.Shared.ResponseCache;
 using Tracker.Shared.Observability.Logging;
 using Tracker.Shared.Security;
+using Tracker.Shared.Observability.SwaggerAuth;
 
 namespace Tracker.Shared;
+
 public static class Extension
 {
-    public static T BindOptions<T>(this IConfiguration configuration, string sectionName) where T : new()
-    => BindOptions<T>(configuration.GetSection(sectionName));
+    public static T BindOptions<T>(this IConfiguration configuration, string sectionName)
+        where T : new() => BindOptions<T>(configuration.GetSection(sectionName));
 
-    public static T BindOptions<T>(this IConfigurationSection section) where T : new()
+    public static T BindOptions<T>(this IConfigurationSection section)
+        where T : new()
     {
         var options = new T();
         section.Bind(options);
@@ -29,6 +32,7 @@ public static class Extension
         app.Services.AddErrorHandling();
         app.Services.AddLogger(app.Configuration);
         app.Services.AddJwt(app.Configuration);
+        app.Services.AddAuthSwagger();
 
         return app;
     }

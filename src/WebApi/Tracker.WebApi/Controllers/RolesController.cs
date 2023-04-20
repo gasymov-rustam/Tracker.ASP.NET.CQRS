@@ -1,5 +1,6 @@
 using Mapster;
 using Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tracker.Application.Commands.RoleCommands.CreateRole;
 using Tracker.Application.Commands.RoleCommands.DeleteRoleCommand;
@@ -13,9 +14,10 @@ namespace Tracker.WebApi.Controllers;
 
 public class RolesController : BaseApiController<RolesController>
 {
-    public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator, logger) { }
+    public RolesController(IMediator mediator, ILogger<RolesController> logger)
+        : base(mediator, logger) { }
 
-    [HttpGet]
+    [HttpGet, Authorize]
     public async ValueTask<IActionResult> GetAllRolesAsync()
     {
         var result = await _mediator.Send(new GetAllRolesQuery());
