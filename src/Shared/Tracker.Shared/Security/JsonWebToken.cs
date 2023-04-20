@@ -8,16 +8,17 @@ public sealed class JsonWebToken
 
     public long Expires { get; }
 
-    public string UserGid { get; } = default!;
+    public string UserId { get; } = default!;
 
     public string Role { get; } = default!;
 
     public IEnumerable<Claim>? Claims { get; }
-    public JsonWebToken(string accessToken, long expires, string userGid, string role, IEnumerable<Claim>? claims)
+
+    public JsonWebToken(string accessToken, long expires, string userId, string role, IEnumerable<Claim>? claims)
     {
         AccessToken = accessToken;
         Expires = expires;
-        UserGid = userGid;
+        UserId = userId;
         Role = role;
         Claims = claims;
     }

@@ -6,6 +6,9 @@
             "project": "Project",
             "roles": "Roles",
             "employye": "Employee",
+            "Security": "Security",
+            "login": "login",
+            "register": "register",
         },
         "dev": {
             "url": "http://localhost:5000/api"

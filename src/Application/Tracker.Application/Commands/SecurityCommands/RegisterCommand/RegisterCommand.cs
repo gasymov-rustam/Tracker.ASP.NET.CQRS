@@ -7,6 +7,7 @@ using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Application.Constants;
 using Tracker.Core.Entities;
+using Tracker.Shared.Constants;
 using Tracker.Shared.ResponsesDto;
 using Tracker.Shared.Security;
 
@@ -16,9 +17,9 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {
-        RuleFor(x => x.Name).MinimumLength(8).MaximumLength(16).NotEmpty();
+        RuleFor(x => x.Name).MinimumLength(4).MaximumLength(16).NotEmpty();
 
-        RuleFor(x => x.Password).MinimumLength(8).MaximumLength(16).NotEmpty();
+        RuleFor(x => x.Password).MinimumLength(4).MaximumLength(16).NotEmpty();
     }
 }
 
@@ -41,44 +42,15 @@ public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
         : base(context, logger, cacheService)
     {
         _jwtProvider = jwtProvider ?? throw new ArgumentNullException(nameof(jwtProvider));
-        _passwordManager =
-            passwordManager ?? throw new ArgumentNullException(nameof(passwordManager));
+        _passwordManager = passwordManager ?? throw new ArgumentNullException(nameof(passwordManager));
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
     }
 
-    public async override ValueTask<Unit> Handle(
-        RegisterCommand command,
-        CancellationToken cancellationToken
-    )
+    public async override ValueTask<Unit> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("RegisterCommandHandler");
 
-        var id = TrackerApplicationConsts.USER_REDIS_PREFIX + command.Name;
-
-        var existedUser = await _cacheService.GetAsync(
-            id,
-            async () =>
-            {
-                var employee = await _context.Users.FirstOrDefaultAsync(
-                    x => x.Name == command.Name,
-                    cancellationToken
-                );
-
-                if (employee is null)
-                {
-                    _logger.LogError(
-                        "GetEmployeeByIdHandler: employee with Name {Name} does not exist",
-                        command.Name
-                    );
-                    return null;
-                }
-
-                _logger.LogDebug(employee.ToString());
-
-                return employee;
-            },
-            cancellationToken
-        );
+        var existedUser = await _context.Users.FirstOrDefaultAsync(x => x.Name == command.Name, cancellationToken);
 
         if (existedUser is not null)
         {
@@ -92,11 +64,7 @@ public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        var jwt = _jwtProvider.CreateToken(
-            createdUser.Entity.Id.ToString(),
-            createdUser.Entity.Name,
-            null
-        );
+        var jwt = _jwtProvider.CreateToken(createdUser.Entity.Id.ToString(), createdUser.Entity.Name, null);
 
         var authResponse = new SecurityResponse(
             createdUser.Entity.Id,
@@ -105,11 +73,11 @@ public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
             jwt.Expires
         );
 
-        _storage.Set(authResponse, "auth");
+        _storage.Set(authResponse, TrackerOptionsConsts.AUTH_PREFIX_HTTP_ACCESSOR);
 
         var createdUserId = TrackerApplicationConsts.USER_REDIS_PREFIX + createdUser.Entity.Name;
 
-        await _cacheService.SetAsync(createdUserId, createdUser, cancellationToken);
+        await _cacheService.SetAsync(createdUserId, createdUser.Entity, cancellationToken);
 
         return Unit.Value;
     }

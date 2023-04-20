@@ -13,7 +13,9 @@ public class UserInitiallizer : IDataInitializer
 
     public UserInitiallizer(
         TrackerDbContext dbContext,
-        ILogger<UserInitiallizer> logger, IPasswordManager passwordManager)
+        ILogger<UserInitiallizer> logger,
+        IPasswordManager passwordManager
+    )
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -22,7 +24,8 @@ public class UserInitiallizer : IDataInitializer
 
     public async Task InitAsync()
     {
-        if (_dbContext.Users.Any()) return;
+        if (_dbContext.Users.Any())
+            return;
 
         await AddUserAsync();
 

@@ -6,6 +6,7 @@ using Tracker.Application.Common.BaseCommandHandler;
 using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Application.Constants;
+using Tracker.Shared.Constants;
 using Tracker.Shared.ResponsesDto;
 using Tracker.Shared.Security;
 
@@ -15,13 +16,13 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator()
     {
-        RuleFor(x => x.Name).MinimumLength(8).MaximumLength(16).NotEmpty();
+        RuleFor(x => x.Name).MinimumLength(4).MaximumLength(16).NotEmpty();
 
-        RuleFor(x => x.Password).MinimumLength(8).MaximumLength(16).NotEmpty();
+        RuleFor(x => x.Password).MinimumLength(4).MaximumLength(16).NotEmpty();
     }
 }
 
-public record LoginCommand(string Name, string Password) : ICommand<Unit>;
+public record LoginCommand(string Name, string Password, string Role) : ICommand<Unit>;
 
 public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
 {
@@ -40,15 +41,11 @@ public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
         : base(context, logger, cacheService)
     {
         _jwtProvider = jwtProvider ?? throw new ArgumentNullException(nameof(jwtProvider));
-        _passwordManager =
-            passwordManager ?? throw new ArgumentNullException(nameof(passwordManager));
+        _passwordManager = passwordManager ?? throw new ArgumentNullException(nameof(passwordManager));
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
     }
 
-    public async override ValueTask<Unit> Handle(
-        LoginCommand command,
-        CancellationToken cancellationToken
-    )
+    public async override ValueTask<Unit> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
         _logger.LogInformation("LoginCommandHandler");
 
@@ -58,17 +55,11 @@ public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
             id,
             async () =>
             {
-                var employee = await _context.Users.FirstOrDefaultAsync(
-                    x => x.Name == command.Name,
-                    cancellationToken
-                );
+                var employee = await _context.Users.FirstOrDefaultAsync(x => x.Name == command.Name, cancellationToken);
 
                 if (employee is null)
                 {
-                    _logger.LogError(
-                        "GetEmployeeByIdHandler: employee with Name {Name} does not exist",
-                        command.Name
-                    );
+                    _logger.LogError("GetEmployeeByIdHandler: user with Name {Name} does not exist", command.Name);
                     return null;
                 }
 
@@ -95,14 +86,9 @@ public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
 
         var jwt = _jwtProvider.CreateToken(existedUser.Id.ToString(), existedUser.Name, null);
 
-        var authResponse = new SecurityResponse(
-            existedUser.Id,
-            existedUser.Name,
-            jwt.AccessToken,
-            jwt.Expires
-        );
+        var authResponse = new SecurityResponse(existedUser.Id, existedUser.Name, jwt.AccessToken, jwt.Expires);
 
-        _storage.Set(authResponse, "auth");
+        _storage.Set(authResponse, TrackerOptionsConsts.AUTH_PREFIX_HTTP_ACCESSOR);
 
         return Unit.Value;
     }

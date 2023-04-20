@@ -6,7 +6,7 @@ namespace Tracker.Shared.Security;
 
 public interface IJwtTokenProvider
 {
-    JsonWebToken CreateToken(string userGid, string role, IDictionary<string, string>? claims);
+    JsonWebToken CreateToken(string userId, string role, IDictionary<string, string>? claims);
 }
 
 public sealed class JwtTokenProvider : IJwtTokenProvider
@@ -15,24 +15,21 @@ public sealed class JwtTokenProvider : IJwtTokenProvider
     private readonly JwtOptions _jwtOptions;
     private readonly IJwtTokenGenerator _tokenGenerator;
 
-    public JwtTokenProvider(
-        IUtcClock clock,
-        JwtOptions jwtOptions,
-        IJwtTokenGenerator tokenGenerator)
+    public JwtTokenProvider(IUtcClock clock, JwtOptions jwtOptions, IJwtTokenGenerator tokenGenerator)
     {
         _clock = clock;
         _jwtOptions = jwtOptions;
         _tokenGenerator = tokenGenerator;
     }
 
-    public JsonWebToken CreateToken(string userGid, string role, IDictionary<string, string>? claims)
+    public JsonWebToken CreateToken(string userId, string role, IDictionary<string, string>? claims)
     {
         var now = _clock.GetCurrentUtc();
 
         var jwtClaims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userGid),
-            new Claim(JwtRegisteredClaimNames.Sub, userGid),
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString())
         };
 
@@ -52,13 +49,9 @@ public sealed class JwtTokenProvider : IJwtTokenProvider
             _jwtOptions.Issuer,
             _jwtOptions.Audience,
             expires,
-            jwtClaims);
+            jwtClaims
+        );
 
-        return new JsonWebToken(
-            jwt,
-            expires.ToTimestamp(),
-            userGid,
-            role ?? string.Empty,
-            jwtClaims);
+        return new JsonWebToken(jwt, expires.ToTimestamp(), userId, role ?? string.Empty, jwtClaims);
     }
 }

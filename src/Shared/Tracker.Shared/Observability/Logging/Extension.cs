@@ -7,6 +7,7 @@ using Serilog.Events;
 using Tracker.Shared.Constants;
 
 namespace Tracker.Shared.Observability.Logging;
+
 public static class Extension
 {
     private const string AppSectionName = "app";
@@ -19,42 +20,56 @@ public static class Extension
         return services;
     }
 
-    public static WebApplicationBuilder AddLogging(this WebApplicationBuilder builder,
+    public static WebApplicationBuilder AddLogging(
+        this WebApplicationBuilder builder,
         Action<LoggerConfiguration>? configure = null,
-        string loggerSectionName = SerilogSectionName, string appSectionName = AppSectionName)
+        string loggerSectionName = SerilogSectionName,
+        string appSectionName = AppSectionName
+    )
     {
         builder.Host.AddLogging(configure, loggerSectionName, appSectionName);
 
         return builder;
     }
 
-    private static IHostBuilder AddLogging(this IHostBuilder builder, Action<LoggerConfiguration>? configure = null,
-        string loggerSectionName = SerilogSectionName, string appSectionName = AppSectionName)
-        => builder.UseSerilog((context, loggerConfiguration) =>
-        {
-            if (string.IsNullOrWhiteSpace(loggerSectionName))
+    private static IHostBuilder AddLogging(
+        this IHostBuilder builder,
+        Action<LoggerConfiguration>? configure = null,
+        string loggerSectionName = SerilogSectionName,
+        string appSectionName = AppSectionName
+    ) =>
+        builder.UseSerilog(
+            (context, loggerConfiguration) =>
             {
-                loggerSectionName = TrackerOptionsConsts.SerilogSectionName;
+                if (string.IsNullOrWhiteSpace(loggerSectionName))
+                {
+                    loggerSectionName = TrackerOptionsConsts.SerilogSectionName;
+                }
+
+                if (string.IsNullOrWhiteSpace(appSectionName))
+                {
+                    appSectionName = TrackerOptionsConsts.AppSectionName;
+                }
+
+                var appOptions = context.Configuration.BindOptions<AppOptions>(appSectionName);
+                var loggerOptions = context.Configuration.BindOptions<SerilogOptions>(loggerSectionName);
+
+                Configure(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
+                configure?.Invoke(loggerConfiguration);
             }
+        );
 
-            if (string.IsNullOrWhiteSpace(appSectionName))
-            {
-                appSectionName = TrackerOptionsConsts.AppSectionName;
-            }
-
-            var appOptions = context.Configuration.BindOptions<AppOptions>(appSectionName);
-            var loggerOptions = context.Configuration.BindOptions<SerilogOptions>(loggerSectionName);
-
-            Configure(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
-            configure?.Invoke(loggerConfiguration);
-        });
-
-    private static void Configure(SerilogOptions serilogOptions, AppOptions appOptions,
-        LoggerConfiguration loggerConfiguration, string environmentName)
+    private static void Configure(
+        SerilogOptions serilogOptions,
+        AppOptions appOptions,
+        LoggerConfiguration loggerConfiguration,
+        string environmentName
+    )
     {
         var level = GetLogEventLevel(serilogOptions.Level);
 
-        loggerConfiguration.Enrich.FromLogContext()
+        loggerConfiguration.Enrich
+            .FromLogContext()
             .MinimumLevel.Is(level)
             .Enrich.WithProperty("Environment", environmentName)
             .Enrich.WithProperty("Application", appOptions.Name)
@@ -93,7 +108,11 @@ public static class Extension
                 interval = RollingInterval.Day;
             }
 
-            loggerConfiguration.WriteTo.File(path, rollingInterval: interval, outputTemplate: TrackerOptionsConsts.FileOutputTemplate);
+            loggerConfiguration.WriteTo.File(
+                path,
+                rollingInterval: interval,
+                outputTemplate: TrackerOptionsConsts.FileOutputTemplate
+            );
         }
 
         if (seqOptions.Enabled)
@@ -102,9 +121,6 @@ public static class Extension
         }
     }
 
-    private static LogEventLevel GetLogEventLevel(string level)
-        => Enum.TryParse<LogEventLevel>(level, true, out var logLevel)
-            ? logLevel
-            : LogEventLevel.Information;
-
+    private static LogEventLevel GetLogEventLevel(string level) =>
+        Enum.TryParse<LogEventLevel>(level, true, out var logLevel) ? logLevel : LogEventLevel.Information;
 }

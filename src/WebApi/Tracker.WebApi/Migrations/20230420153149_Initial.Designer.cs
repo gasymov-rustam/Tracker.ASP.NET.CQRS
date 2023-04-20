@@ -12,7 +12,7 @@ using Tracker.Infrastructure.Dal;
 namespace Tracker.WebApi.Migrations
 {
     [DbContext(typeof(TrackerDbContext))]
-    [Migration("20230417172639_Initial")]
+    [Migration("20230420153149_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

@@ -40,7 +40,8 @@ public class CacheService : ICacheService
         }
     }
 
-    public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
+    public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
+        where T : class
     {
         try
         {
@@ -55,7 +56,8 @@ public class CacheService : ICacheService
         }
     }
 
-    public async Task<T?> GetAsync<T>(string key, Func<Task<T?>> factory, CancellationToken cancellationToken = default) where T : class
+    public async Task<T?> GetAsync<T>(string key, Func<Task<T?>> factory, CancellationToken cancellationToken = default)
+        where T : class
     {
         T? value = await GetAsync<T>(key, cancellationToken);
 
@@ -75,11 +77,9 @@ public class CacheService : ICacheService
         if (value is null)
             return null;
 
-        var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + key;
-
         try
         {
-            await SetAsync(id, value, cancellationToken);
+            await SetAsync(key, value, cancellationToken);
         }
         catch (Exception e)
         {
@@ -89,7 +89,8 @@ public class CacheService : ICacheService
         return value;
     }
 
-    public async Task SetAsync<T>(string key, T value, CancellationToken cancellationToken = default) where T : class
+    public async Task SetAsync<T>(string key, T value, CancellationToken cancellationToken = default)
+        where T : class
     {
         try
         {
@@ -119,12 +120,19 @@ public class CacheService : ICacheService
 
     public async Task RemoveByPreFixAsync(string preFix, CancellationToken cancellationToken = default)
     {
-        IEnumerable<Task> tasks = _cacheKeys.Keys.Where(x => x.StartsWith(preFix)).Select(x => RemoveAsync(x, cancellationToken));
+        IEnumerable<Task> tasks = _cacheKeys.Keys
+            .Where(x => x.StartsWith(preFix))
+            .Select(x => RemoveAsync(x, cancellationToken));
 
         await Task.WhenAll(tasks);
     }
 
-    public async Task<List<T>> GetAllByPrefixAsync<T>(string preFix, Func<Task<List<T>>> factory, CancellationToken cancellationToken) where T : class, IBaseEntity
+    public async Task<List<T>> GetAllByPrefixAsync<T>(
+        string preFix,
+        Func<Task<List<T>>> factory,
+        CancellationToken cancellationToken
+    )
+        where T : class, IBaseEntity
     {
         List<T> values = new();
 
@@ -153,7 +161,7 @@ public class CacheService : ICacheService
 
         foreach (T value in values)
         {
-            var id = TrackerApplicationConsts.EMPLOYEE_REDIS_PREFIX + value.Id;
+            var id = preFix + value.Id;
 
             try
             {
