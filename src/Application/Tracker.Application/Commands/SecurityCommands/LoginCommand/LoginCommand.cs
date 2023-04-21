@@ -6,7 +6,9 @@ using Tracker.Application.Common.BaseCommandHandler;
 using Tracker.Application.Common.Caching;
 using Tracker.Application.Common.Interfaces;
 using Tracker.Application.Constants;
+using Tracker.Core.Entities;
 using Tracker.Shared.Constants;
+using Tracker.Shared.Exceptions;
 using Tracker.Shared.ResponsesDto;
 using Tracker.Shared.Security;
 
@@ -73,7 +75,7 @@ public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
         if (existedUser is null)
         {
             _logger.LogError("LoginCommandHandler: user not found");
-            return Unit.Value;
+            throw new BaseException(ExceptionCodes.ValueMismatch, "LoginCommandHandler: user not found");
         }
 
         bool isCorrectPassword = _passwordManager.Validate(command.Password, existedUser.Password);
@@ -81,12 +83,20 @@ public class LoginCommandHandler : BaseCommandHandler<LoginCommand, Unit>
         if (!isCorrectPassword)
         {
             _logger.LogError("LoginCommandHandler: password is not correct");
-            return Unit.Value;
+            throw new BaseException(ExceptionCodes.ValueMismatch, "LoginCommandHandler: password is not correct");
         }
 
         var jwt = _jwtProvider.CreateToken(existedUser.Id.ToString(), existedUser.Name, null);
 
-        var authResponse = new SecurityResponse(existedUser.Id, existedUser.Name, jwt.AccessToken, jwt.Expires);
+        var role = await _context.Roles.FirstOrDefaultAsync(x => x.Id == existedUser.RoleId, cancellationToken);
+
+        var authResponse = new SecurityResponse(
+            existedUser.Id,
+            existedUser.Name,
+            role?.Name ?? Role.DefaultName,
+            jwt.AccessToken,
+            jwt.Expires
+        );
 
         _storage.Set(authResponse, TrackerOptionsConsts.AUTH_PREFIX_HTTP_ACCESSOR);
 

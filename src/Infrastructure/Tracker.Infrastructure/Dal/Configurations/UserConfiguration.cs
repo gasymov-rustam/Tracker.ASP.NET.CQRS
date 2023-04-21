@@ -11,5 +11,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(128);
         builder.Property(x => x.Password).IsRequired().HasMaxLength(128);
+        builder.HasOne(e => e.Role).WithMany(e => e.Users).HasForeignKey(e => e.RoleId);
     }
 }

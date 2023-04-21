@@ -1,4 +1,5 @@
 namespace Tracker.Shared.Exceptions;
+
 public static class ExceptionCodes
 {
     public static string ValueIsNullOrEmpty => "value_is_null_or_empty";

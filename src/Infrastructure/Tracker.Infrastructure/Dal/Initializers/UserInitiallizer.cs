@@ -34,7 +34,12 @@ public class UserInitiallizer : IDataInitializer
 
     private async Task AddUserAsync()
     {
-        await _dbContext.Users.AddAsync(new User("Alex", _passwordManager.Secure("111111111111")));
+        var role = await _dbContext.Roles.FirstOrDefaultAsync();
+
+        if (role is null)
+            throw new InvalidOperationException("Role is null.");
+
+        await _dbContext.Users.AddAsync(new User("Alex", _passwordManager.Secure("111111111111"), role.Id));
 
         _logger.LogInformation("Initialized UsersDb");
     }

@@ -8,6 +8,7 @@ using Tracker.Application.Common.Interfaces;
 using Tracker.Application.Constants;
 using Tracker.Core.Entities;
 using Tracker.Shared.Constants;
+using Tracker.Shared.Exceptions;
 using Tracker.Shared.ResponsesDto;
 using Tracker.Shared.Security;
 
@@ -23,7 +24,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
     }
 }
 
-public record RegisterCommand(string Name, string Password) : ICommand<Unit>;
+public record RegisterCommand(string Name, string Password, Guid RoleId) : ICommand<Unit>;
 
 public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
 {
@@ -55,10 +56,15 @@ public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
         if (existedUser is not null)
         {
             _logger.LogError("LoginCommandHandler: user with this name already exists");
-            return Unit.Value;
+            throw new BaseException(ExceptionCodes.ValueMismatch, "user with this name already exists");
         }
 
-        User user = new(command.Name, _passwordManager.Secure(command.Password));
+        var validRole =
+            command.RoleId != default
+                ? await _context.Roles.FirstOrDefaultAsync(x => x.Id == command.RoleId)
+                : await _context.Roles.FirstOrDefaultAsync(x => x.Name == Role.DefaultName);
+
+        User user = new(command.Name, _passwordManager.Secure(command.Password), validRole.Id);
 
         var createdUser = await _context.Users.AddAsync(user, cancellationToken);
 
@@ -69,6 +75,7 @@ public class RegisterCommandHandler : BaseCommandHandler<RegisterCommand, Unit>
         var authResponse = new SecurityResponse(
             createdUser.Entity.Id,
             createdUser.Entity.Name,
+            validRole.Name,
             jwt.AccessToken,
             jwt.Expires
         );

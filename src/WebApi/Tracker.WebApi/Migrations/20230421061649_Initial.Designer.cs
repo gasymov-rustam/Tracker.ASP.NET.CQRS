@@ -12,7 +12,7 @@ using Tracker.Infrastructure.Dal;
 namespace Tracker.WebApi.Migrations
 {
     [DbContext(typeof(TrackerDbContext))]
-    [Migration("20230420153149_Initial")]
+    [Migration("20230421061649_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -156,7 +156,12 @@ namespace Tracker.WebApi.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -218,6 +223,17 @@ namespace Tracker.WebApi.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Tracker.Core.Entities.User", b =>
+                {
+                    b.HasOne("Tracker.Core.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Tracker.Core.Entities.Employee", b =>
                 {
                     b.Navigation("Projects");
@@ -226,6 +242,8 @@ namespace Tracker.WebApi.Migrations
             modelBuilder.Entity("Tracker.Core.Entities.Role", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
