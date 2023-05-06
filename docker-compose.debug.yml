@@ -5,6 +5,24 @@ networks:
     driver: bridge
 
 services:
+  prometheus:
+    build: ./compose/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    networks:
+      - trackerwebapi-dev
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      - trackerwebapi-dev
+    ports:
+      - 3000:3000
+
   tracker.webapi:
     image: ${DOCKER_REGISTRY-}trackerwebapi
     build:
@@ -89,4 +107,8 @@ volumes:
   postgres:
     driver: local
   redis:
+    driver: local
+  prometheus:
+    driver: local
+  grafana:
     driver: local

@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args).AddShared();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var redisConnection = builder.Configuration.GetConnectionString(TrackerApplicationConsts.REDIS_CONNECTION_STRING);
+
 // Add services to the container.
 builder.Services.AddDataBaseContext(connectionString ?? "");
 

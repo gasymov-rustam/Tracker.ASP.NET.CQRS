@@ -7,6 +7,7 @@ using Tracker.Shared.ResponseCache;
 using Tracker.Shared.Observability.Logging;
 using Tracker.Shared.Security;
 using Tracker.Shared.Observability.SwaggerAuth;
+using Tracker.Shared.Observability.Metrics;
 
 namespace Tracker.Shared;
 
@@ -33,6 +34,7 @@ public static class Extension
         app.Services.AddLogger(app.Configuration);
         app.Services.AddJwt(app.Configuration);
         app.Services.AddAuthSwagger();
+        app.Services.AddMetrics(app.Configuration);
 
         return app;
     }
@@ -43,6 +45,7 @@ public static class Extension
         // app.UseResponseCaching();
         app.UseErrorHandling();
         app.UseAuthentication();
+        app.UseMetrics();
         app.UseAuthorization();
 
         return app;
