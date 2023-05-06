@@ -1,5 +1,6 @@
 # @url = http://localhost:5000/api/Roles
 @id = de97f7c3-6f5b-4082-8204-775be4bddf86
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZlZjY4YmI5LTRkNmEtNDhiMy04YTM5LTdjOWMwMmY1Njc1MSIsInN1YiI6ImZlZjY4YmI5LTRkNmEtNDhiMy04YTM5LTdjOWMwMmY1Njc1MSIsImlhdCI6IjE2ODMzNTM2NDM5NzYiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ0ZXN0MSIsIm5iZiI6MTY4MzM1MzY0MywiZXhwIjoxNjgzMzU3MjQzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJ0cmFja2VyLXN5c3RlbSJ9.69pQqJL_J-tNRReoATIzdbhbiOqYxTHUxhIurms6KXM 
 # @pageNumber=1
 # @pageSize=10
 
@@ -7,16 +8,19 @@
 # GET {{url}}/all
 GET {{url}}/{{roles}}
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 ###
 # GET {{url}}/id - get single by id
 GET {{url}}/{{roles}}/{{id}}
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 # string name
 ###
 POST {{url}}/{{roles}}
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 "User5"
 
@@ -24,6 +28,7 @@ Content-Type: application/json
 ###
 PUT {{url}}/{{roles}}
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 {
     "name": "User",
@@ -34,6 +39,7 @@ Content-Type: application/json
 ###
 DELETE  {{url}}/{{roles}}/{{id}}
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 
 # # string Name, DateOnly CreatedAt, DateOnly FinishedAt

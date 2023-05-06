@@ -1,4 +1,5 @@
 ﻿using Tracker.Core.Primitive;
+using Tracker.Shared.Exceptions;
 
 namespace Tracker.Core.Entities;
 
@@ -24,13 +25,20 @@ public sealed class Employee : BaseEntity
 
     public static Employee UpdateEmployeeName(Employee employee, string Name)
     {
-        employee.Name = Name;
+        if (string.IsNullOrEmpty(Name))
+        {
+            throw new BaseException(ExceptionCodes.ValueIsNullOrEmpty, "Name can not be empty!");
+        }
+        else
+        {
+            employee.Name = Name;
 
-        return employee;
+            return employee;
+        }
     }
 
-    public override string ToString()
-    {
-        return $"Project: {Name} - {Sex} - {Role.Id} - {Role.Name} - {RoleId}";
-    }
+    //public override string ToString()
+    //{
+    //    return $"Project: {Name} - {Sex} - {Role.Id} - {Role.Name} - {RoleId}";
+    //}
 }
